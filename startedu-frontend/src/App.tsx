@@ -1,10 +1,15 @@
 import Cadastro from "./pages/Cadastro";
+import Home from "./pages/Home";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <>
-      <Cadastro />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Cadastro />} />
+        <Route path="/home" element={<Home />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

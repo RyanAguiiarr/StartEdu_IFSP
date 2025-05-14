@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as Form from "@radix-ui/react-form";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { cadastrar } from "../../services/cadastroService";
 import "./style.css";
@@ -8,6 +9,8 @@ const Cadastro = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -39,6 +42,8 @@ const Cadastro = () => {
       const response = await cadastrar(userData);
       console.log("Resposta da API:", response);
       setSuccess(true);
+      navigate("/home"); // Redireciona para a página inicial após o cadastro
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error("Erro ao cadastra:", err);

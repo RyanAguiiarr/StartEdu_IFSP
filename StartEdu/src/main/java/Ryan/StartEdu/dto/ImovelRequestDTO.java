@@ -1,13 +1,9 @@
-package Ryan.StartEdu.model;
+package Ryan.StartEdu.dto;
 
-import jakarta.persistence.*;
+import Ryan.StartEdu.model.Imobiliaria;
+import jakarta.persistence.ManyToOne;
 
-@Entity
-public class Imovel {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class ImovelRequestDTO {
 
     private String nome;
     private String endereco;
@@ -17,28 +13,9 @@ public class Imovel {
     private Number num_banheiros;
     private Boolean mobiliado;
     private Boolean status;
-    @ManyToOne
-    private Imobiliaria imobiliaria_id;
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getNome() {
         return nome;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
     }
 
     public void setNome(String nome) {
@@ -59,6 +36,14 @@ public class Imovel {
 
     public void setNumero(String numero) {
         this.numero = numero;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     public Number getNum_quartos() {
@@ -91,13 +76,5 @@ public class Imovel {
 
     public void setStatus(Boolean status) {
         this.status = status;
-    }
-
-    public Imobiliaria getImobiliaria_id() {
-        return imobiliaria_id;
-    }
-
-    public void setImobiliaria_id(Imobiliaria imobiliaria_id) {
-        this.imobiliaria_id = imobiliaria_id;
     }
 }
