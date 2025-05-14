@@ -27,4 +27,40 @@ public class ImovelResponseDTO {
         this.mobiliado = imovel.getMobiliado();
         this.status = imovel.getStatus();
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public Number getNum_quartos() {
+        return num_quartos;
+    }
+
+    public Number getNum_banheiros() {
+        return num_banheiros;
+    }
+
+    public Boolean getMobiliado() {
+        return mobiliado;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
 }

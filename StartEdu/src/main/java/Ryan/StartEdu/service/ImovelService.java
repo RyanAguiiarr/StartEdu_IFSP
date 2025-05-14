@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
+
 @Service
 public class ImovelService {
 
@@ -31,5 +33,12 @@ public class ImovelService {
         var imovelNovo = imovelRepository.save(imovel);
 
         return new ImovelResponseDTO(imovelNovo);
+    }
+
+    public List<ImovelResponseDTO> buscarImoveis() {
+        var imoveis = imovelRepository.findAll();
+        return imoveis.stream()
+                .map(imovel -> new ImovelResponseDTO(imovel))
+                .toList();
     }
 }

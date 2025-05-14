@@ -12,8 +12,12 @@ body {
   position: relative;
   max-width: 1600px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0;
   box-sizing: border-box;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 /* Navbar */
@@ -24,17 +28,33 @@ body {
   height: 80px;
   border-bottom: 1px solid #dddddd;
   padding: 0;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
 .logo {
   display: flex;
   align-items: center;
   color: #ff385c;
+  padding-left: 12px;
+  height: 100%;
+}
+
+.logo svg {
+  height: 32px;
+  width: auto;
 }
 
 .nav-tabs {
   display: flex;
   gap: 20px;
+  flex-grow: 1;
+  justify-content: center;
+  padding: 0 20px;
 }
 
 .tab {
@@ -42,6 +62,7 @@ body {
   cursor: pointer;
   position: relative;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .tab.active {
@@ -61,6 +82,7 @@ body {
 .user-profile {
   display: flex;
   align-items: center;
+  padding-right: 12px;
 }
 
 .profile-pic {
@@ -76,8 +98,10 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-top: 24px;
-  padding-bottom: 24px;
+  padding: 0 24px 24px 104px; /* Dar espaço para a sidebar */
   position: relative;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .view-types {
@@ -225,27 +249,40 @@ body {
   background-color: #ff385c;
 }
 
-/* Listings Grid */
+/* Listings Grid - Ajuste para 5 imóveis por linha */
 .listings-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr); /* Exibe até 5 imóveis por linha */
   gap: 24px;
-  padding-left: 80px;
-  margin-top: 20px;
+  padding: 24px;
+  margin-bottom: 40px;
+  min-height: 30vh;
+  width: calc(100% - 80px);
+  margin-left: 80px;
 }
 
+/* Card de Imóvel - Melhorado com espaços internos */
 .listing-card {
-  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
   overflow: hidden;
-  transition: transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  height: 100%;
+  min-height: 300px;
+  background-color: white;
+  border: 1px solid #eaeaea;
 }
 
 .listing-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-6px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  border-color: #d0d0d0;
 }
 
 .card-image {
-  height: 200px;
+  height: 180px;
   background-size: cover;
   background-position: center;
   position: relative;
@@ -254,17 +291,32 @@ body {
 
 .favorite-btn {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  background: none;
+  top: 12px;
+  right: 12px;
+  background-color: rgba(255, 255, 255, 0.8);
   border: none;
-  color: white;
-  font-size: 24px;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #ff385c;
   cursor: pointer;
+  transition: all 0.2s;
+}
+
+.favorite-btn:hover {
+  background-color: white;
+  transform: scale(1.1);
 }
 
 .card-content {
-  padding: 16px 0;
+  padding: 16px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .card-header {
@@ -275,63 +327,129 @@ body {
 }
 
 .card-header h3 {
-  margin: 0;
   font-size: 16px;
-  font-weight: 500;
-  line-height: 1.2;
+  font-weight: 600;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .rating {
   display: flex;
   align-items: center;
   gap: 4px;
+  font-size: 14px;
 }
 
 .star {
-  color: #222;
+  color: #ff385c;
 }
 
 .location {
-  margin: 4px 0;
-  color: #717171;
   font-size: 14px;
+  color: #444;
+  margin: 0 0 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.details {
+  color: #717171;
+  margin: 8px 0;
+  font-size: 14px;
+  line-height: 1.4;
+  flex-grow: 1;
 }
 
 .price {
+  font-size: 15px;
   margin: 8px 0 0;
-  font-size: 14px;
 }
 
 .price strong {
   font-weight: 600;
+  font-size: 16px;
+}
+
+/* Mensagem para quando não há imóveis */
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  font-size: 18px;
+  color: #6c757d;
+  margin: 20px 0;
 }
 
 /* Footer */
 .made-in {
-  position: fixed;
-  bottom: 16px;
-  right: 16px;
-  background-color: #222;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 12px;
+  padding: 16px;
+  text-align: center;
+  margin-top: auto;
+  background-color: #f8f9fa;
+  color: #6c757d;
+  font-size: 14px;
+  position: relative;
+  bottom: 0;
+  width: 100%;
 }
 
-/* Responsive Design */
-@media (max-width: 1200px) {
+/* Loading Message */
+.loading-message {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 1.2rem;
+  color: #717171;
+}
+
+/* Responsive Design - Ajuste para grid responsivo */
+@media (min-width: 1601px) {
   .listings-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(
+      5,
+      1fr
+    ); /* 5 por linha em telas extra grandes */
+  }
+}
+
+@media (max-width: 1600px) {
+  .listings-grid {
+    grid-template-columns: repeat(4, 1fr); /* 4 por linha em telas grandes */
+  }
+}
+
+@media (max-width: 1280px) {
+  .listings-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 por linha em telas médias */
   }
 }
 
 @media (max-width: 992px) {
   .listings-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr); /* 2 por linha em telas pequenas */
+    width: 100%;
+    margin-left: 0;
+    gap: 20px;
+    padding: 20px;
   }
 
   .nav-tabs {
     display: none;
+  }
+
+  .view-controls {
+    padding-left: 24px;
   }
 }
 
@@ -341,34 +459,37 @@ body {
   }
 
   .listings-grid {
-    padding-left: 0;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr); /* 2 por linha em tablets */
     gap: 16px;
+    padding: 16px;
   }
 
-  .search-bar {
-    display: none;
+  .card-image {
+    height: 160px;
   }
 
-  .airbnb-container {
-    padding: 0 16px;
+  .card-content {
+    padding: 12px;
   }
 
-  .search-input-container {
-    width: 100%;
-  }
-
-  .search-input {
-    width: 100%;
+  .card-header h3 {
+    font-size: 15px;
   }
 }
 
 @media (max-width: 576px) {
   .listings-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* 1 por linha em celulares */
+    padding: 12px;
   }
 
-  .view-controls {
-    justify-content: center;
+  .card-image {
+    height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .listings-grid {
+    grid-template-columns: 1fr;
   }
 }
