@@ -52,4 +52,20 @@ public class ImovelController {
         }
         return ResponseEntity.ok(imoveis);
     }
+
+    @GetMapping("/{nome}")
+    public ResponseEntity<ImovelResponseDTO> buscarIMovelPorNome(@PathVariable String nome) {
+        ImovelResponseDTO imovelResponseDTO = imovelService.buscarImovelPorNome(nome);
+
+        Map<String, Object> logData = new HashMap<>();
+        logData.put("event", "BUSCA_IMOVEL_POR_ID");
+        logData.put("imovelName", nome);
+        if(imovelResponseDTO != null) {
+            logger.info("Imóvel encontrado: {}", logData);
+        }
+        else {
+            logger.error("Imóvel não encontrado: {}", logData);
+        }
+        return ResponseEntity.ok(imovelResponseDTO);
+    }
 }

@@ -41,4 +41,13 @@ public class ImovelService {
                 .map(imovel -> new ImovelResponseDTO(imovel))
                 .toList();
     }
+
+    public ImovelResponseDTO buscarImovelPorNome(String name) {
+        var imovel = imovelRepository.findAll();
+        return imovel.stream()
+                .filter(imovel1 -> imovel1.getNome().equals(name))
+                .map(imovel1 -> new ImovelResponseDTO(imovel1))
+                .findFirst()
+                .orElse(null);
+    }
 }

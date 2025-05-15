@@ -26,6 +26,54 @@ const Home = () => {
   const [listings, setListings] = useState<Imovel[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Função de busca por nome do imóvel
+  const buscarImoveis = async () => {
+    if (!searchQuery.trim()) return;
+
+    try {
+      setLoading(true);
+      // Chamada da API com parâmetro de busca
+      const response = await axios.get(
+        `http://localhost:8080/imovel/${searchQuery}`
+      );
+
+      if (Array.isArray(response.data) && response.data.length > 0) {
+        // Adaptando os dados da API para o formato atual do seu componente
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const imoveisFormatados = response.data.map((imovel: any) => ({
+          id: imovel.id,
+          image:
+            imovel.image || "https://via.placeholder.com/300x200?text=Imóvel",
+          title: imovel.nome || "Imóvel sem título",
+          location:
+            imovel.endereco && imovel.numero
+              ? `${imovel.endereco}, ${imovel.numero}`
+              : "Endereço não informado",
+          price: `R$ ${Math.floor(Math.random() * 500 + 100)}`,
+          rating: (Math.random() * (5 - 4) + 4).toFixed(2),
+          nome: imovel.nome,
+          endereco: imovel.endereco,
+          numero: imovel.numero,
+          descricao: imovel.descricao,
+          num_quartos: imovel.num_quartos,
+          num_banheiros: imovel.num_banheiros,
+          mobiliado: imovel.mobiliado,
+          status: imovel.status,
+        }));
+
+        setListings(imoveisFormatados);
+      } else {
+        // Se não encontrar resultados
+        setListings([]);
+      }
+    } catch (error) {
+      console.error("Erro ao buscar imóveis:", error);
+      setListings([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Mock data como fallback caso a API falhe
   const mockListings = [
     {
@@ -195,8 +243,15 @@ const Home = () => {
               placeholder="Procurar acomodações"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  buscarImoveis();
+                }
+              }}
             />
-            <span className="dropdown">▼</span>
+            <button className="search-button" onClick={buscarImoveis}>
+              Buscar
+            </button>
           </div>
           <div className="divider"></div>
           <div className="search-item">
