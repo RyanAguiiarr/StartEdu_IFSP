@@ -1,7 +1,12 @@
 package Ryan.StartEdu.dto;
 
+import Ryan.StartEdu.model.ImagemImovel;
 import Ryan.StartEdu.model.Imobiliaria;
+import Ryan.StartEdu.model.Interesse;
 import jakarta.persistence.ManyToOne;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 public class ImovelRequestDTO {
 
@@ -9,8 +14,11 @@ public class ImovelRequestDTO {
     private String endereco;
     private String numero;
     private String descricao;
-    private Number num_quartos;
-    private Number num_banheiros;
+    private List<MultipartFile> imagens;
+    private String localizacao;
+    private String preco;
+    private Integer num_quartos;
+    private Integer num_banheiros;
     private Boolean mobiliado;
     private Boolean status;
 
@@ -20,6 +28,30 @@ public class ImovelRequestDTO {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public List<MultipartFile> getImagens() {
+        return imagens;
+    }
+
+    public void setImagens(List<MultipartFile> imagens) {
+        this.imagens = imagens;
+    }
+
+    public String getLocalizacao() {
+        return localizacao;
+    }
+
+    public void setLocalizacao(String localizacao) {
+        this.localizacao = localizacao;
+    }
+
+    public String getPreco() {
+        return preco;
+    }
+
+    public void setPreco(String preco) {
+        this.preco = preco;
     }
 
     public String getEndereco() {
@@ -46,19 +78,19 @@ public class ImovelRequestDTO {
         this.descricao = descricao;
     }
 
-    public Number getNum_quartos() {
+    public Integer getNum_quartos() {
         return num_quartos;
     }
 
-    public void setNum_quartos(Number num_quartos) {
+    public void setNum_quartos(Integer num_quartos) {
         this.num_quartos = num_quartos;
     }
 
-    public Number getNum_banheiros() {
+    public Integer getNum_banheiros() {
         return num_banheiros;
     }
 
-    public void setNum_banheiros(Number num_banheiros) {
+    public void setNum_banheiros(Integer num_banheiros) {
         this.num_banheiros = num_banheiros;
     }
 

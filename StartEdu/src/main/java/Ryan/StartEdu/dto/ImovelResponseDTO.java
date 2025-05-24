@@ -1,8 +1,11 @@
 package Ryan.StartEdu.dto;
 
+import Ryan.StartEdu.model.ImagemImovel;
 import Ryan.StartEdu.model.Imobiliaria;
 import Ryan.StartEdu.model.Imovel;
 import jakarta.persistence.ManyToOne;
+
+import java.util.List;
 
 public class ImovelResponseDTO {
 
@@ -11,8 +14,11 @@ public class ImovelResponseDTO {
     private String endereco;
     private String numero;
     private String descricao;
-    private Number num_quartos;
-    private Number num_banheiros;
+    private List<String> imagens;
+    private String localizacao;
+    private String preco;
+    private Integer num_quartos;
+    private Integer num_banheiros;
     private Boolean mobiliado;
     private Boolean status;
 
@@ -26,6 +32,11 @@ public class ImovelResponseDTO {
         this.num_banheiros = imovel.getNum_banheiros();
         this.mobiliado = imovel.getMobiliado();
         this.status = imovel.getStatus();
+        this.imagens = imovel.getImagens().stream()
+                .map(ImagemImovel::getUrl)
+                .toList();
+        this.localizacao = imovel.getLocalizacao();
+        this.preco = imovel.getPreco();
     }
 
     public Long getId() {
@@ -40,6 +51,18 @@ public class ImovelResponseDTO {
         return endereco;
     }
 
+    public List<String> getImagens() {
+        return imagens;
+    }
+
+    public String getLocalizacao() {
+        return localizacao;
+    }
+
+    public String getPreco() {
+        return preco;
+    }
+
     public String getNumero() {
         return numero;
     }
@@ -48,11 +71,11 @@ public class ImovelResponseDTO {
         return descricao;
     }
 
-    public Number getNum_quartos() {
+    public Integer getNum_quartos() {
         return num_quartos;
     }
 
-    public Number getNum_banheiros() {
+    public Integer getNum_banheiros() {
         return num_banheiros;
     }
 

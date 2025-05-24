@@ -2,6 +2,9 @@ package Ryan.StartEdu.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 public class Imovel {
 
@@ -13,8 +16,12 @@ public class Imovel {
     private String endereco;
     private String numero;
     private String descricao;
-    private Number num_quartos;
-    private Number num_banheiros;
+    @OneToMany(mappedBy = "imovel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ImagemImovel> imagens = new ArrayList<>();
+    private String localizacao;
+    private String preco;
+    private Integer num_quartos;
+    private Integer num_banheiros;
     private Boolean mobiliado;
     private Boolean status;
     @ManyToOne
@@ -45,6 +52,60 @@ public class Imovel {
         this.nome = nome;
     }
 
+    public List<ImagemImovel> getImagens() {
+        return imagens;
+    }
+
+    public void setImagens(List<ImagemImovel> imagens) {
+        this.imagens = imagens;
+    }
+
+    public void adicionarImagem(String url) {
+        ImagemImovel imagem = new ImagemImovel();
+        imagem.setUrl(url);
+        imagem.setImovel(this);
+        this.imagens.add(imagem);
+    }
+
+    public void removerImagem(ImagemImovel imagem) {
+        this.imagens.remove(imagem);
+        imagem.setImovel(null);
+    }
+
+    // Método de compatibilidade para manter código existente funcionando
+    public String getImage() {
+        if (imagens != null && !imagens.isEmpty()) {
+            return imagens.get(0).getUrl();
+        }
+        return null;
+    }
+
+    public void setImage(String image) {
+        if (image != null) {
+            if (imagens.isEmpty()) {
+                adicionarImagem(image);
+            } else {
+                imagens.get(0).setUrl(image);
+            }
+        }
+    }
+
+    public String getLocalizacao() {
+        return localizacao;
+    }
+
+    public void setLocalizacao(String localizacao) {
+        this.localizacao = localizacao;
+    }
+
+    public String getPreco() {
+        return preco;
+    }
+
+    public void setPreco(String preco) {
+        this.preco = preco;
+    }
+
     public String getEndereco() {
         return endereco;
     }
@@ -61,19 +122,19 @@ public class Imovel {
         this.numero = numero;
     }
 
-    public Number getNum_quartos() {
+    public Integer getNum_quartos() {
         return num_quartos;
     }
 
-    public void setNum_quartos(Number num_quartos) {
+    public void setNum_quartos(Integer num_quartos) {
         this.num_quartos = num_quartos;
     }
 
-    public Number getNum_banheiros() {
+    public Integer getNum_banheiros() {
         return num_banheiros;
     }
 
-    public void setNum_banheiros(Number num_banheiros) {
+    public void setNum_banheiros(Integer num_banheiros) {
         this.num_banheiros = num_banheiros;
     }
 
