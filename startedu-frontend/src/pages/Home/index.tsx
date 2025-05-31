@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./style.css";
 import axios from "axios";
+import { tratandoImagensDeImovel } from "./functions/functions";
 
 // Defina uma interface para tipar os dados dos imóveis
 interface ImagemImovel {
@@ -57,63 +58,9 @@ const Home = () => {
             response.data !== null &&
             !Array.isArray(response.data))
         ) {
-          // Converte para array se for um objeto único
-          const imoveisData = Array.isArray(response.data)
-            ? response.data
-            : [response.data];
-
-          console.log(`Processando ${imoveisData.length} imóveis`);
-
-          // Adaptando os dados da API para o formato atual do seu componente
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const imoveisFormatados = imoveisData.map((imovel: any) => {
-            // Primeiro definimos uma imagem padrão
-            let imageUrl = "https://via.placeholder.com/300x200?text=Imóvel";
-
-            // Verificamos o formato da propriedade imagens
-            console.log("Formato das imagens:", imovel.imagens);
-
-            if (imovel.imagens) {
-              // Se imagens for um array de strings (novo formato)
-              if (
-                Array.isArray(imovel.imagens) &&
-                typeof imovel.imagens[0] === "string"
-              ) {
-                // Extrair o nome do arquivo do caminho completo
-                const caminhoCompleto = imovel.imagens[0];
-                const filename = caminhoCompleto.split("\\").pop(); // Separa pelo caractere de barra invertida
-                if (filename) {
-                  imageUrl = `http://localhost:8080/imovel/images/${filename}`;
-                  console.log(`URL da imagem formatada: ${imageUrl}`);
-                }
-              }
-            }
-
-            return {
-              id: imovel.id,
-              image: imageUrl,
-              title: imovel.nome || "Imóvel sem título",
-              localizacao:
-                imovel.endereco && imovel.numero
-                  ? `${imovel.endereco}, ${imovel.numero}`
-                  : "Endereço não informado",
-              preco: imovel.preco
-                ? `R$ ${imovel.preco}`
-                : `R$ ${Math.floor(Math.random() * 500 + 100)}`,
-              rating: (Math.random() * (5 - 4) + 4).toFixed(2),
-              nome: imovel.nome,
-              endereco: imovel.endereco,
-              numero: imovel.numero,
-              descricao: imovel.descricao,
-              num_quartos: imovel.num_quartos,
-              num_banheiros: imovel.num_banheiros,
-              mobiliado: imovel.mobiliado,
-              status: imovel.status,
-            };
-          });
-
-          console.log("Imóveis formatados:", imoveisFormatados);
-          setListings(imoveisFormatados);
+          setListings(await tratandoImagensDeImovel(response));
+        
+          
         } else {
           // Usa dados mockados se a API retornar vazio
           setListings(
@@ -181,81 +128,17 @@ const Home = () => {
       console.log("Status da resposta:", response.status);
       console.log("Dados recebidos:", response.data);
 
-      // Adicione mais logs para melhor diagnóstico
       console.log("Tipo de response.data:", typeof response.data);
       console.log("É array?", Array.isArray(response.data));
 
-      // Modifica a verificação para tratar tanto array quanto objeto único
-      if (
-        (Array.isArray(response.data) && response.data.length > 0) ||
-        (typeof response.data === "object" &&
-          response.data !== null &&
-          !Array.isArray(response.data))
-      ) {
-        console.log("Dados válidos encontrados na resposta");
-
-        // Converte para array se for um objeto único
-        const imoveisData = Array.isArray(response.data)
-          ? response.data
-          : [response.data];
-
-        console.log(`Processando ${imoveisData.length} imóveis`);
-
-        // Adaptando os dados da API para o formato atual do seu componente
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const imoveisFormatados = imoveisData.map((imovel: any) => {
-          // Primeiro definimos uma imagem padrão
-          let imageUrl = "https://via.placeholder.com/300x200?text=Imóvel";
-
-          // Verificamos o formato da propriedade imagens
-          console.log("Formato das imagens:", imovel.imagens);
-
-          if (imovel.imagens) {
-            // Se imagens for um array de strings (novo formato)
-            if (
-              Array.isArray(imovel.imagens) &&
-              typeof imovel.imagens[0] === "string"
-            ) {
-              // Extrair o nome do arquivo do caminho completo
-              const caminhoCompleto = imovel.imagens[0];
-              const filename = caminhoCompleto.split("\\").pop(); // Separa pelo caractere de barra invertida
-              if (filename) {
-                imageUrl = `http://localhost:8080/imovel/images/${filename}`;
-                console.log(`URL da imagem formatada: ${imageUrl}`);
-              }
-            }
-          }
-
-          const formatado = {
-            id: imovel.id,
-            image: imageUrl,
-            title: imovel.nome || "Imóvel sem título",
-            localizacao:
-              imovel.endereco && imovel.numero
-                ? `${imovel.endereco}, ${imovel.numero}`
-                : "Endereço não informado",
-            preco: `R$ ${Math.floor(Math.random() * 500 + 100)}`,
-            rating: (Math.random() * (5 - 4) + 4).toFixed(2),
-            nome: imovel.nome,
-            endereco: imovel.endereco,
-            numero: imovel.numero,
-            descricao: imovel.descricao,
-            num_quartos: imovel.num_quartos,
-            num_banheiros: imovel.num_banheiros,
-            mobiliado: imovel.mobiliado,
-            status: imovel.status,
-          };
-          console.log("Imóvel formatado:", formatado);
-          return formatado;
-        });
-
-        console.log("Lista final de imóveis formatados:", imoveisFormatados);
-        setListings(imoveisFormatados);
+      const imoveisFormatados = await tratandoImagensDeImovel(response);
+      if(imoveisFormatados.length > 0){
+        setListings(await tratandoImagensDeImovel(response));
       } else {
         // Se não encontrar resultados
         console.log("Nenhum imóvel encontrado na resposta da API");
         setListings([]);
-      }
+    }
     } catch (error) {
       console.error("Erro ao buscar imóveis:", error);
 
