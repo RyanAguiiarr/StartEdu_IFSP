@@ -186,6 +186,7 @@ export function CadastroImovel() {
   };
 
   return (
+    <div className="fundo"> 
     <div className="cadastro-imovel-container">
       <h1>Cadastro de Imóvel</h1>
 
@@ -363,6 +364,7 @@ export function CadastroImovel() {
           </button>
         </div>
       </form>
+    </div>
     </div>
   );
 }

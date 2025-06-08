@@ -22,6 +22,15 @@
   padding: 0;
 }
 
+.fundo{
+  max-width: 100vw;
+  background: linear-gradient(to bottom, #5a189a, #5a189a, #3c096c,  #240046); /* Azul escuro elegante */
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 input,
 textarea,
 button {
@@ -65,7 +74,7 @@ body {
   font-weight: 600;
   margin-bottom: 1.5rem;
   text-align: center;
-  color: var(--primary-color);
+  color: #ffffff;
 }
 
 /* Campos do formulário */

@@ -67,6 +67,7 @@ const Cadastro = () => {
   };
 
   return (
+    <div className="fundo">
     <Form.Root className="FormRoot" onSubmit={handleSubmit}>
       <h1 className="FormTitle">Cadastre-se</h1>
 
@@ -168,6 +169,7 @@ const Cadastro = () => {
         </button>
       </Form.Submit>
     </Form.Root>
+    </div>
   );
 };
 

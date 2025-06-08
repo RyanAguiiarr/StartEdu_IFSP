@@ -21,6 +21,7 @@ public class Aluno {
     private String telefone;
     private Date dataNascimento;
     private String sexo;
+    private String image;
     @ManyToMany
     @JoinTable(
             name = "aluno_curso",
@@ -65,6 +66,14 @@ public class Aluno {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public void setEmail(String email) {
