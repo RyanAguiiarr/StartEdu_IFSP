@@ -11,9 +11,6 @@ public class ImagemAluno {
 
     private String url;
 
-    @ManyToOne
-    @JoinColumn(name = "aluno_id")
-    private Aluno aluno;
 
     public Long getId() {
         return id;
@@ -29,13 +26,5 @@ public class ImagemAluno {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public Aluno getAluno() {
-        return aluno;
-    }
-
-    public void setAluno(Aluno aluno) {
-        this.aluno = aluno;
     }
 }

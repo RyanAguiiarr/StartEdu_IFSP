@@ -6,6 +6,7 @@ import {
   tratandoImoveisFicticios,
 } from "./functions/functions";
 import logoStartEdu from "../../images/logo.png";
+import { fazerLogout, obterUsuario } from "../../services/authService";
 
 // Defina uma interface para tipar os dados dos imóveis
 interface ImagemImovel {
@@ -38,6 +39,10 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [listings, setListings] = useState<Imovel[]>([]);
   const [loading, setLoading] = useState(true);
+  const [usuario, setUsuario] = useState<{
+    nome: string;
+    foto?: string;
+  } | null>(null);
 
   // Função de busca por nome do imóvel
   const buscarImoveis = async () => {
@@ -221,6 +226,14 @@ const Home = () => {
     fetchImoveis();
   }, []); // Executa apenas uma vez quando o componente monta
 
+  // Adicionar useEffect para obter dados do usuário
+  useEffect(() => {
+    const usuarioLogado = obterUsuario();
+    if (usuarioLogado) {
+      setUsuario(usuarioLogado);
+    }
+  }, []);
+
   return (
     <div className="airbnb-container">
       {/* Navbar */}
@@ -235,8 +248,57 @@ const Home = () => {
           <div className="tab">Faculdades</div>
           <div className="tab">Mais Procurados</div>
         </nav>
-        <div className="user-profile">
-          <div className="profile-pic"></div>
+        <div className="nav-actions">
+          <button
+            className="btn-anunciar"
+            onClick={() => (window.location.href = "/imovel")}
+            title="Anunciar um novo imóvel"
+          >
+            <span className="btn-icon">+</span>
+            <span className="btn-text">Anunciar Imóvel</span>
+          </button>
+          <div className="user-profile user-menu">
+            {usuario ? (
+              <>
+                <div
+                  className="profile-pic"
+                  style={{
+                    backgroundImage: `url(${usuario.foto})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                  title={usuario.nome}
+                />
+                <div className="dropdown-menu">
+                  <div className="dropdown-item">
+                    Olá, {usuario.nome.split(" ")[0]}
+                  </div>
+                  <div className="dropdown-divider"></div>
+                  <div
+                    className="dropdown-item"
+                    onClick={() => (window.location.href = "/aluno")}
+                  >
+                    Editar Perfil
+                  </div>
+                  <div
+                    className="dropdown-item"
+                    onClick={() => {
+                      fazerLogout();
+                      window.location.reload();
+                    }}
+                  >
+                    Sair
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div
+                className="profile-pic"
+                onClick={() => (window.location.href = "/aluno")}
+                title="Fazer login ou cadastro"
+              />
+            )}
+          </div>
         </div>
       </header>
 
@@ -291,8 +353,6 @@ const Home = () => {
       </div>
 
       {/* Sidebar navigation */}
-      
-
 
       {/* Main content - listings grid */}
       <div className="listings-grid">

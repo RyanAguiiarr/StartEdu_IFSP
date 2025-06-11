@@ -29,6 +29,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/imovel").permitAll()
                         .requestMatchers("/imovel/**").permitAll()
+                        .requestMatchers("/aluno/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->

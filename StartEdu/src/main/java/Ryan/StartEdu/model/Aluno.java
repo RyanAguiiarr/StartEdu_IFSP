@@ -19,9 +19,12 @@ public class Aluno {
     @Email
     private String email;
     private String telefone;
-    private Date dataNascimento;
+    @Column(nullable = true)
+    private String dataNascimento;
     private String sexo;
-    private String image;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "imagem_id")
+    private ImagemAluno image;
     @ManyToMany
     @JoinTable(
             name = "aluno_curso",
@@ -68,11 +71,11 @@ public class Aluno {
         return email;
     }
 
-    public String getImage() {
+    public ImagemAluno getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(ImagemAluno image) {
         this.image = image;
     }
 
@@ -80,11 +83,11 @@ public class Aluno {
         this.email = email;
     }
 
-    public Date getDataNascimento() {
+    public String getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(Date dataNascimento) {
+    public void setDataNascimento(String dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 
