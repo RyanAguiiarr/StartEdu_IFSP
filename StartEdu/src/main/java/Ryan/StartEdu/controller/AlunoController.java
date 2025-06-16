@@ -45,4 +45,28 @@ public class AlunoController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @PutMapping
+    public ResponseEntity<Aluno> AtualizarAluno(@ModelAttribute Aluno aluno, @RequestParam(value = "imagen", required = false) MultipartFile foto){
+        try{
+            if(foto == null || foto.isEmpty()){
+                logger.error("Nenhuma imagem foi enviada para o aluno: {}", aluno.getNome());
+            }
+            Aluno alunoAtualizado = alunoService.atualizarAluno(aluno, foto);
+
+            Map<String, Object> logData = new HashMap<>();
+            logData.put("event", "ATUALIZAÇÃO_ALUNO");
+            logData.put("alunoId", alunoAtualizado.getId());
+            if (alunoAtualizado != null) {
+                logger.info("Aluno atualizado com sucesso: {}", logData);
+            } else {
+                logger.error("Erro ao atualizar aluno: {}", logData);
+            }
+            return ResponseEntity.ok(alunoAtualizado);
+        } catch (Exception e) {
+            logger.error("Erro ao atualizar aluno: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 }

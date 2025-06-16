@@ -120,10 +120,44 @@ body {
   min-width: 180px;
   z-index: 1000;
   display: none;
+  /* Adicionar margem superior negativa para criar área de interação */
+  margin-top: -10px;
+  /* Adicionar padding superior para incluir o espaço na área sensível */
+  padding-top: 18px;
+  /* Transição suave para aparecer e desaparecer */
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
 }
 
+/* Aumentar a área de trigger do menu */
+.user-menu::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 20px; /* Área invisível maior para evitar que o menu feche */
+  background: transparent;
+}
+
+/* Ajustando quando o menu deve aparecer */
 .user-menu:hover .dropdown-menu {
   display: block;
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Manter o menu visível quando o cursor estiver sobre ele */
+.dropdown-menu:hover {
+  display: block;
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Adicionar um pequeno atraso antes do menu desaparecer */
+.user-menu:not(:hover) .dropdown-menu {
+  transition-delay: 0.3s;
 }
 
 .dropdown-item {

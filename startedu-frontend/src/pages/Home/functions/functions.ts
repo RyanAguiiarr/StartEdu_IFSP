@@ -1,3 +1,5 @@
+import imovelPadrao from "../../../images/imovel_teste.jpg";
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function tratandoImagensDeImovel(response: any) {
   console.log("Resposta da API:", response);
@@ -16,7 +18,7 @@ async function tratandoImagensDeImovel(response: any) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const imoveisFormatados = imoveisData.map((imovel: any) => {
     // Primeiro definimos uma imagem padrão
-    let imageUrl = "https://via.placeholder.com/300x200?text=Imóvel";
+    let imageUrl = imovelPadrao; // Imagem padrão
 
     // Verificamos o formato da propriedade imagens
     console.log("Formato das imagens:", imovel.imagens);

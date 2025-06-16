@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 
 @Service
 public class AlunoService {
@@ -30,7 +31,6 @@ public class AlunoService {
         alunoNovo.setTelefone(aluno.getTelefone());
         alunoNovo.setSexo(aluno.getSexo());
         alunoNovo.setDataNascimento(aluno.getDataNascimento());
-
 
         if (foto != null && !foto.isEmpty()) {
             try {
@@ -58,6 +58,45 @@ public class AlunoService {
         alunoRepository.save(alunoNovo);
 
         return alunoNovo;
+    }
+
+    public Aluno atualizarAluno(Aluno aluno, MultipartFile foto) {
+        Optional<Aluno> alunoExistente = alunoRepository.findByCpf(aluno.getCpf());
+        System.out.println("alunoExistente = " + alunoExistente);
+        System.out.println("cpf = " + alunoExistente.get().getCpf());
+        if (alunoExistente.isPresent()) {
+            Aluno alunoAtualizado = alunoExistente.get();
+            alunoAtualizado.setNome(aluno.getNome());
+            alunoAtualizado.setCpf(aluno.getCpf());
+            alunoAtualizado.setEmail(aluno.getEmail());
+            alunoAtualizado.setTelefone(aluno.getTelefone());
+            alunoAtualizado.setSexo(aluno.getSexo());
+            alunoAtualizado.setDataNascimento(aluno.getDataNascimento());
+
+            if (foto != null && !foto.isEmpty()) {
+                try {
+                    ImagemAluno imagemAluno = new ImagemAluno();
+                    alunoAtualizado.setImage(imagemAluno);
+
+                    Path uploadDir = fileStorageConfig.getUploadPath();
+                    Files.createDirectories(uploadDir);
+
+                    String fileName = System.currentTimeMillis() + "_" + foto.getOriginalFilename();
+                    Path filePath = uploadDir.resolve(fileName);
+                    Files.copy(foto.getInputStream(), filePath);
+
+                    imagemAluno.setUrl(filePath.toString());
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException("Erro ao criar diretório para upload de arquivos", e);
+                }
+            }
+
+            return alunoRepository.save(alunoAtualizado);
+        } else {
+            throw new RuntimeException("Aluno não encontrado");
+        }
     }
 
 

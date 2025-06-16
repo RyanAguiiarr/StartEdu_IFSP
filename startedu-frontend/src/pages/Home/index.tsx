@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./style.css";
+import "./Home_style.css";
 import axios from "axios";
 import {
   tratandoImagensDeImovel,
@@ -7,6 +7,7 @@ import {
 } from "./functions/functions";
 import logoStartEdu from "../../images/logo.png";
 import { fazerLogout, obterUsuario } from "../../services/authService";
+import imagempadrao from "../../images/imovel_teste.jpg";
 
 // Defina uma interface para tipar os dados dos imóveis
 interface ImagemImovel {
@@ -127,7 +128,7 @@ const Home = () => {
   const mockListings = [
     {
       id: 1,
-      image: "whitefish.jpg",
+      image: imagempadrao,
       title: "Whitefish Estate",
       location: "Whitefish, Montana, United States",
       price: "R$ 10.000",
@@ -135,7 +136,7 @@ const Home = () => {
     },
     {
       id: 2,
-      image: "luxury-barbados.jpg",
+      image: imagempadrao,
       title: "Luxury stay in Weston, Saint James, Barbados",
       location: "Weston, Saint James, Barbados",
       price: "R$ 1.500",
@@ -143,7 +144,7 @@ const Home = () => {
     },
     {
       id: 3,
-      image: "lake-como.jpg",
+      image: imagempadrao,
       title: "Numero 22 - Lake Como - Design Living & Lake View",
       location: "Laglio, Lombardia, Italy",
       price: "R$ 359",
@@ -151,7 +152,7 @@ const Home = () => {
     },
     {
       id: 4,
-      image: "dubai.jpg",
+      image: imagempadrao,
       title: "7,500 sq ft Private Beachfront Estate",
       location: "Dubai, United Arab Emirates",
       price: "R$ 2.478",
@@ -159,7 +160,7 @@ const Home = () => {
     },
     {
       id: 5,
-      image: "tulum.jpg",
+      image: imagempadrao,
       title: "Bohemian & Spacious / Private Pool and Garden",
       location: "Tulum, Quintana Roo, Mexico",
       price: "R$ 199",
@@ -167,7 +168,7 @@ const Home = () => {
     },
     {
       id: 6,
-      image: "aframe.jpg",
+      image: imagempadrao,
       title: "Designer A-Frame Cabin in the Trees",
       location: "Lake Arrowhead, California, United States",
       price: "R$ 225",
@@ -175,7 +176,7 @@ const Home = () => {
     },
     {
       id: 7,
-      image: "aspen.jpg",
+      image: imagempadrao,
       title: "Fully Renovated 2 BR on River w/ Pool - Walk to To",
       location: "Aspen, Colorado, United States",
       price: "R$ 546",
@@ -183,7 +184,7 @@ const Home = () => {
     },
     {
       id: 8,
-      image: "magnolia.jpg",
+      image: imagempadrao,
       title: "Magnolia's Hillcrest Cottage",
       location: "Waco, Texas, United States",
       price: "R$ 500",
@@ -229,8 +230,11 @@ const Home = () => {
   // Adicionar useEffect para obter dados do usuário
   useEffect(() => {
     const usuarioLogado = obterUsuario();
-    if (usuarioLogado) {
-      setUsuario(usuarioLogado);
+    if (usuarioLogado && typeof usuarioLogado.nome === "string") {
+      setUsuario({
+        nome: usuarioLogado.nome ?? "",
+        foto: usuarioLogado.foto,
+      });
     }
   }, []);
 

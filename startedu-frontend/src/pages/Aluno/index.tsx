@@ -1,14 +1,15 @@
 import React, { useState, useRef } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import axios from "axios";
-import { salvarUsuario } from "../../services/authService";
-import "./style.css";
+import { salvarUsuario, obterUsuario } from "../../services/authService";
+import "./Aluno_style.css";
 
 // Usando uma imagem base64 inline (uma imagem de avatar simples em roxo)
 const defaultProfileImage =
   "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTYgMjU2Ij48cmVjdCB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgZmlsbD0iIzVhMTg5YSIvPjxjaXJjbGUgY3g9IjEyOCIgY3k9Ijk2IiByPSI0MCIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik0yMTYsMTg0LjVjMC00OC42LTM5LjQtODgtODgtODhzLTg4LDM5LjQtODgsODhjMCw4LjMsMS4yLDE2LjMsMy4zLDI0YzQuOCwxNS43LDEzLjcsMjkuNSwyNS45LDQwLjJsNS40LDQuNUg5NmwxMTIsMC4ybDEwLjktMC43QzIzMS43LDI0MC40LDI0NCwyMTMuOSwyNDQsMTg0LjVDMjQ0LDE4NC41LDIxNiwxODQuNSwyMTYsMTg0LjV6IiBmaWxsPSIjZmZmIi8+PC9zdmc+";
 
 interface AlunoData {
+  id?: number;
   nome: string;
   cpf: string;
   email: string;
@@ -77,22 +78,28 @@ const PerfilAluno: React.FC = () => {
         formData.append("imagen", foto);
       }
 
-      // Enviar para a API
-      const response = await axios.post(
-        "http://localhost:8080/aluno",
-        formData,
-        {
+      let response;
+      if (obterUsuario()) {
+        response = await axios.put("http://localhost:8080/aluno", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
-      );
+        });
+      } else {
+        response = await axios.post("http://localhost:8080/aluno", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+      }
 
       // Obter dados do aluno da resposta
       const alunoSalvo = response.data as {
         id: string;
         nome: string;
         email: string;
+        telefone?: string;
+        imagem?: string;
         // adicione outros campos se necessário
       };
 

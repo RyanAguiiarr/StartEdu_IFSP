@@ -1,0 +1,279 @@
+@import "@radix-ui/colors/violet.css";
+@import "@radix-ui/colors/mauve.css";
+
+/* Cores e variáveis personalizadas */
+:root {
+  --primary-color: #4f46e5;
+  --primary-hover: #4338ca;
+  --bg-color: #f9fafb;
+  --text-color: #1f2937;
+  --error-color: #ef4444;
+  --input-bg: #ffffff;
+  --input-border: #d1d5db;
+  --input-focus: #4f46e5;
+  --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Reset de estilos */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.fundo {
+  max-width: 100vw;
+  background: linear-gradient(
+    to bottom,
+    #5a189a,
+    #5a189a,
+    #3c096c,
+    #240046
+  ); /* Azul escuro elegante */
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+input,
+textarea,
+button {
+  all: unset;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, sans-serif;
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+/* Container do formulário */
+.FormRoot {
+  width: 100%;
+  max-width: 450px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  padding: 2rem;
+  margin: 0 auto;
+  transition: transform 0.3s ease;
+  animation: fadeIn 0.5s ease;
+}
+
+.FormRoot:hover {
+  transform: translateY(-5px);
+}
+
+/* Título do formulário */
+.FormTitle {
+  color: #333;
+  font-size: 1.75rem;
+  margin-bottom: 1.75rem;
+  text-align: center;
+}
+
+/* Campos do formulário */
+.FormField {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.25rem;
+  position: relative;
+}
+
+.FormLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+}
+
+.FormMessage {
+  font-size: 0.75rem;
+  color: var(--error-color);
+  margin-top: 0.25rem;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+/* Adicione essa classe após o estilo do .FormMessage */
+
+.FormHint {
+  font-size: 0.75rem;
+  color: var(--text-color);
+  opacity: 0.7;
+  margin-top: 0.3rem;
+  text-align: right;
+}
+
+/* Adicione estes estilos após a definição do .FormMessage */
+
+.ErrorMessage {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #f87171;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.SuccessMessage {
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #4ade80;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* Entradas do formulário */
+.Input,
+.Textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: var(--text-color);
+  background-color: var(--input-bg);
+  transition: all 0.2s ease;
+}
+
+.Input:hover,
+.Textarea:hover {
+  border-color: var(--primary-color);
+}
+
+.Input:focus,
+.Textarea:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+  outline: none;
+}
+
+.Textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Estilo para o select */
+select.Input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='14' height='8' viewBox='0 0 14 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L7 7L13 1' stroke='%234B5563' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+select.Input option {
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  padding: 0.5rem;
+}
+
+/* Botão de envio */
+.Button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.Button:hover {
+  background-color: var(--primary-hover);
+}
+
+.Button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.4);
+}
+
+/* Estado de loading para o botão */
+.Button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background-color: var(--primary-color);
+}
+
+/* Links de ajuda */
+.FormLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+}
+
+.FormLink {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.FormLink:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
+/* Layout responsivo */
+@media (max-width: 640px) {
+  .FormRoot {
+    padding: 1.5rem;
+  }
+
+  .FormTitle {
+    font-size: 1.25rem;
+  }
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estilo para dispositivos com modo escuro ativado */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #111827;
+    --text-color: #f9fafb;
+    --input-bg: #1f2937;
+    --input-border: #374151;
+  }
+
+  .FormRoot {
+    background-color: #1f2937;
+  }
+
+  select.Input {
+    background-image: url("data:image/svg+xml,%3Csvg width='14' height='8' viewBox='0 0 14 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L7 7L13 1' stroke='%23F9FAFB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+}

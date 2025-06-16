@@ -53,4 +53,12 @@ public class AuthService {
         return new AuthResponseDTO(token);
 
     }
+
+    public Cadastro atualizarEmailCadastro(String email, String novoEmail) {
+        Cadastro cadastro = cadastroRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        cadastro.setEmail(novoEmail);
+        return cadastroRepository.save(cadastro);
+    }
 }

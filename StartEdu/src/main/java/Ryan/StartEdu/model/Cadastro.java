@@ -12,6 +12,7 @@ public class Cadastro {
 
     private String nome;
     @Email
+    @Column(unique = true, nullable = false)
     private String email;
     private String senha;
 

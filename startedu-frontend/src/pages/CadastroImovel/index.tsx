@@ -2,7 +2,7 @@
 import { useState } from "react";
 import type { FormEvent, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import "./style.css";
+import "./CadastroImovel_style.css";
 import { cadastrarImovel } from "../../services/cadastrarImovelService";
 
 interface ImovelData {
@@ -186,185 +186,185 @@ export function CadastroImovel() {
   };
 
   return (
-    <div className="fundo"> 
-    <div className="cadastro-imovel-container">
-      <h1>Cadastro de Imóvel</h1>
+    <div className="fundo">
+      <div className="cadastro-imovel-container">
+        <h1>Cadastro de Imóvel</h1>
 
-      {mensagem.texto && (
-        <div className={`mensagem ${mensagem.tipo}`}>{mensagem.texto}</div>
-      )}
+        {mensagem.texto && (
+          <div className={`mensagem ${mensagem.tipo}`}>{mensagem.texto}</div>
+        )}
 
-      <form onSubmit={handleSubmit} className="form-cadastro-imovel">
-        {/* Campos existentes */}
-        <div className="form-group">
-          <label htmlFor="nome">Nome do Imóvel*</label>
-          <input
-            type="text"
-            id="nome"
-            name="nome"
-            value={imovel.nome}
-            onChange={handleChange}
-            required
-            placeholder="Ex: Apartamento Centro"
-          />
-        </div>
-
-        <div className="form-row">
+        <form onSubmit={handleSubmit} className="form-cadastro-imovel">
+          {/* Campos existentes */}
           <div className="form-group">
-            <label htmlFor="endereco">Endereço*</label>
+            <label htmlFor="nome">Nome do Imóvel*</label>
             <input
               type="text"
-              id="endereco"
-              name="endereco"
-              value={imovel.endereco}
+              id="nome"
+              name="nome"
+              value={imovel.nome}
               onChange={handleChange}
               required
-              placeholder="Ex: Rua Aparecido Francisco Natal da Silva"
+              placeholder="Ex: Apartamento Centro"
             />
           </div>
 
-          <div className="form-group small">
-            <label htmlFor="numero">Número*</label>
-            <input
-              type="text"
-              id="numero"
-              name="numero"
-              value={imovel.numero}
-              onChange={handleChange}
-              required
-              placeholder="Ex: 175"
-            />
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="descricao">Descrição</label>
-          <textarea
-            id="descricao"
-            name="descricao"
-            value={imovel.descricao}
-            onChange={handleChange}
-            placeholder="Descreva detalhes sobre o imóvel"
-            rows={4}
-          />
-        </div>
-
-        {/* Campos numéricos com valores máximos */}
-        <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="num_quartos">Número de Quartos*</label>
-            <input
-              type="number"
-              id="num_quartos"
-              name="num_quartos"
-              min="0"
-              max="127"
-              value={imovel.num_quartos}
-              onChange={handleChange}
-              required
-            />
-            <small className="form-hint">Máximo: 127</small>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="num_banheiros">Número de Banheiros*</label>
-            <input
-              type="number"
-              id="num_banheiros"
-              name="num_banheiros"
-              min="0"
-              max="127"
-              value={imovel.num_banheiros}
-              onChange={handleChange}
-              required
-            />
-            <small className="form-hint">Máximo: 127</small>
-          </div>
-        </div>
-
-        {/* Novo campo para upload de imagens */}
-        <div className="form-group">
-          <label htmlFor="imagens">Imagens do Imóvel</label>
-          <div className="imagem-upload-container">
-            <label htmlFor="imagens" className="imagem-upload-label">
-              <span>Escolher imagens</span>
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="endereco">Endereço*</label>
               <input
-                type="file"
-                id="imagens"
-                name="imagens"
-                accept="image/*"
-                multiple
-                onChange={handleImagemChange}
-                className="imagem-input"
+                type="text"
+                id="endereco"
+                name="endereco"
+                value={imovel.endereco}
+                onChange={handleChange}
+                required
+                placeholder="Ex: Rua Aparecido Francisco Natal da Silva"
               />
-            </label>
-            <span className="imagem-info">
-              Formatos aceitos: JPG, PNG. Máx: 5MB
-            </span>
-          </div>
-
-          {/* Preview das imagens */}
-          {imagensPreview.length > 0 && (
-            <div className="imagens-preview">
-              {imagensPreview.map((preview, index) => (
-                <div key={index} className="imagem-preview-container">
-                  <img
-                    src={preview}
-                    alt={`Preview ${index + 1}`}
-                    className="imagem-preview"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removerImagem(index)}
-                    className="remover-imagem"
-                  >
-                    &times;
-                  </button>
-                </div>
-              ))}
             </div>
-          )}
-        </div>
 
-        {/* Checkboxes */}
-        <div className="form-row checkbox-row">
-          <div className="form-group checkbox">
-            <input
-              type="checkbox"
-              id="mobiliado"
-              name="mobiliado"
-              checked={imovel.mobiliado}
-              onChange={handleChange}
-            />
-            <label htmlFor="mobiliado">Mobiliado</label>
+            <div className="form-group small">
+              <label htmlFor="numero">Número*</label>
+              <input
+                type="text"
+                id="numero"
+                name="numero"
+                value={imovel.numero}
+                onChange={handleChange}
+                required
+                placeholder="Ex: 175"
+              />
+            </div>
           </div>
 
-          <div className="form-group checkbox">
-            <input
-              type="checkbox"
-              id="status"
-              name="status"
-              checked={imovel.status}
+          <div className="form-group">
+            <label htmlFor="descricao">Descrição</label>
+            <textarea
+              id="descricao"
+              name="descricao"
+              value={imovel.descricao}
               onChange={handleChange}
+              placeholder="Descreva detalhes sobre o imóvel"
+              rows={4}
             />
-            <label htmlFor="status">Disponível para aluguel</label>
           </div>
-        </div>
 
-        <div className="button-group">
-          <button type="submit" className="btn-cadastrar">
-            Cadastrar Imóvel
-          </button>
-          <button
-            type="button"
-            className="btn-cancelar"
-            onClick={() => window.history.back()}
-          >
-            Cancelar
-          </button>
-        </div>
-      </form>
-    </div>
+          {/* Campos numéricos com valores máximos */}
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="num_quartos">Número de Quartos*</label>
+              <input
+                type="number"
+                id="num_quartos"
+                name="num_quartos"
+                min="0"
+                max="127"
+                value={imovel.num_quartos}
+                onChange={handleChange}
+                required
+              />
+              <small className="form-hint">Máximo: 127</small>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="num_banheiros">Número de Banheiros*</label>
+              <input
+                type="number"
+                id="num_banheiros"
+                name="num_banheiros"
+                min="0"
+                max="127"
+                value={imovel.num_banheiros}
+                onChange={handleChange}
+                required
+              />
+              <small className="form-hint">Máximo: 127</small>
+            </div>
+          </div>
+
+          {/* Novo campo para upload de imagens */}
+          <div className="form-group">
+            <label htmlFor="imagens">Imagens do Imóvel</label>
+            <div className="imagem-upload-container">
+              <label htmlFor="imagens" className="imagem-upload-label">
+                <span>Escolher imagens</span>
+                <input
+                  type="file"
+                  id="imagens"
+                  name="imagens"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImagemChange}
+                  className="imagem-input"
+                />
+              </label>
+              <span className="imagem-info">
+                Formatos aceitos: JPG, PNG. Máx: 5MB
+              </span>
+            </div>
+
+            {/* Preview das imagens */}
+            {imagensPreview.length > 0 && (
+              <div className="imagens-preview">
+                {imagensPreview.map((preview, index) => (
+                  <div key={index} className="imagem-preview-container">
+                    <img
+                      src={preview}
+                      alt={`Preview ${index + 1}`}
+                      className="imagem-preview"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removerImagem(index)}
+                      className="remover-imagem"
+                    >
+                      &times;
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Checkboxes */}
+          <div className="form-row checkbox-row">
+            <div className="form-group checkbox">
+              <input
+                type="checkbox"
+                id="mobiliado"
+                name="mobiliado"
+                checked={imovel.mobiliado}
+                onChange={handleChange}
+              />
+              <label htmlFor="mobiliado">Mobiliado</label>
+            </div>
+
+            <div className="form-group checkbox">
+              <input
+                type="checkbox"
+                id="status"
+                name="status"
+                checked={imovel.status}
+                onChange={handleChange}
+              />
+              <label htmlFor="status">Disponível para aluguel</label>
+            </div>
+          </div>
+
+          <div className="button-group">
+            <button type="submit" className="btn-cadastrar">
+              Cadastrar Imóvel
+            </button>
+            <button
+              type="button"
+              className="btn-cancelar"
+              onClick={() => window.history.back()}
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
