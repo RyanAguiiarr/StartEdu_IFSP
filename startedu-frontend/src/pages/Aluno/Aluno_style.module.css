@@ -1,0 +1,370 @@
+/* Container principal */
+.perfilAlunoContainer {
+  width: 90%;
+  max-width: 800px;
+  margin: 3rem auto;
+  padding: 3rem;
+  background: rgba(31, 31, 43, 0.92);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 2;
+  color: white;
+}
+
+/* Cabeçalho */
+.perfilHeader {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  position: relative;
+}
+
+.perfilHeader h1 {
+  margin-bottom: 0.8rem;
+  font-size: 2.2rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #fff, #c8a4ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+}
+
+.perfilHeader h1::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 52px;
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, #ff6a3d, #4a02b4);
+  transform: translateX(-50%);
+  border-radius: 2px;
+}
+
+.perfilHeader p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+/* Mensagens de feedback */
+.mensagem {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sucesso {
+  background-color: rgba(46, 204, 113, 0.2);
+  border: 1px solid rgba(46, 204, 113, 0.4);
+  color: #2ecc71;
+}
+
+.sucesso::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, #2ecc71, transparent);
+  animation: pulse 2s infinite;
+}
+
+.erro {
+  background-color: rgba(231, 76, 60, 0.2);
+  border: 1px solid rgba(231, 76, 60, 0.4);
+  color: #e74c3c;
+}
+
+.erro::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, #e74c3c, transparent);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}
+
+/* Formulário principal */
+.perfilForm {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Seção da foto de perfil */
+.fotoPerfilContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.fotoPerfil {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  border: 4px solid rgba(255, 106, 61, 0.7);
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.fotoPerfil:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(255, 106, 61, 0.4);
+}
+
+.fotoOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.4) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.fotoPerfil:hover .fotoOverlay {
+  opacity: 1;
+}
+
+.fotoOverlay span {
+  color: white;
+  text-align: center;
+  font-size: 0.9rem;
+  padding: 15px 10px;
+  width: 100%;
+  font-weight: 500;
+}
+
+/* Campos do formulário */
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.formRow {
+  display: flex;
+  gap: 2rem;
+  width: 100%;
+}
+
+.formGroup label {
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+  color: white;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.formGroup label::before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  background-color: #ff6a3d;
+  border-radius: 50%;
+  margin-right: 8px;
+  position: relative;
+  top: -1px;
+}
+
+.formGroup input,
+.formGroup select {
+  padding: 1.2rem 1.4rem;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  font-size: 1rem;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.formGroup input:focus,
+.formGroup select:focus {
+  border-color: #ff6a3d;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 106, 61, 0.3);
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.formGroup input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Select com estilo personalizado */
+.formGroup select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  padding-right: 40px;
+}
+
+/* Botões */
+.buttonGroup {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.btnSalvar,
+.btnCancelar {
+  padding: 1.2rem 2.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 180px;
+}
+
+.btnSalvar {
+  background: linear-gradient(135deg, #ff6a3d, #dd5700);
+  color: white;
+  border: 1px solid rgba(255, 106, 61, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.btnSalvar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.7s;
+}
+
+.btnSalvar:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.btnSalvar:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ff7d57, #f26118);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 25px rgba(255, 106, 61, 0.4);
+}
+
+.btnCancelar {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btnCancelar:hover:not(:disabled) {
+  background: rgba(238, 82, 83, 0.8);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 25px rgba(238, 82, 83, 0.3);
+}
+
+.btnSalvar:disabled,
+.btnCancelar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Fundo da página com gradiente */
+.fundo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #1f1f2b;
+  background-image: radial-gradient(
+      at 40% 20%,
+      rgba(74, 2, 180, 0.2) 0px,
+      transparent 50%
+    ),
+    radial-gradient(at 80% 0%, rgba(255, 106, 61, 0.1) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, rgba(74, 2, 180, 0.2) 0px, transparent 50%),
+    radial-gradient(at 80% 100%, rgba(255, 106, 61, 0.1) 0px, transparent 50%);
+  background-size: cover;
+  padding: 40px 20px;
+}
+
+/* Media queries para responsividade */
+@media (max-width: 768px) {
+  .perfilAlunoContainer {
+    padding: 2rem;
+    width: 95%;
+  }
+
+  .perfilHeader h1 {
+    font-size: 1.8rem;
+  }
+
+  .formRow {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+  }
+
+  .btnSalvar,
+  .btnCancelar {
+    width: 100%;
+  }
+}

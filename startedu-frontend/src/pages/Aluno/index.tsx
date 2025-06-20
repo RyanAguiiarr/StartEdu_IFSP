@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import axios from "axios";
 import { salvarUsuario, obterUsuario } from "../../services/authService";
-import "./Aluno_style.css";
+import styles from "./Aluno_style.module.css";
 
 // Usando uma imagem base64 inline (uma imagem de avatar simples em roxo)
 const defaultProfileImage =
@@ -155,26 +155,28 @@ const PerfilAluno: React.FC = () => {
   };
 
   return (
-    <div className="perfil-aluno-container">
-      <div className="perfil-header">
+    <div className={styles.perfilAlunoContainer}>
+      <div className={styles.perfilHeader}>
         <h1>Perfil do Aluno</h1>
         <p>Personalize suas informações de perfil</p>
       </div>
 
       {mensagem && (
-        <div className={`mensagem ${mensagem.tipo}`}>{mensagem.texto}</div>
+        <div className={`${styles.mensagem} ${styles[mensagem.tipo]}`}>
+          {mensagem.texto}
+        </div>
       )}
 
-      <form onSubmit={handleSubmit} className="perfil-form">
-        <div className="foto-perfil-container">
+      <form onSubmit={handleSubmit} className={styles.perfilForm}>
+        <div className={styles.fotoPerfilContainer}>
           <div
-            className="foto-perfil"
+            className={styles.fotoPerfil}
             onClick={handleClickFoto}
             style={{
               backgroundImage: `url(${fotoPreview || defaultProfileImage})`,
             }}
           >
-            <div className="foto-overlay">
+            <div className={styles.fotoOverlay}>
               <span>Alterar foto</span>
             </div>
           </div>
@@ -187,7 +189,7 @@ const PerfilAluno: React.FC = () => {
           />
         </div>
 
-        <div className="form-group">
+        <div className={styles.formGroup}>
           <label htmlFor="nome">Nome Completo*</label>
           <input
             type="text"
@@ -200,8 +202,8 @@ const PerfilAluno: React.FC = () => {
           />
         </div>
 
-        <div className="form-row">
-          <div className="form-group">
+        <div className={styles.formRow}>
+          <div className={styles.formGroup}>
             <label htmlFor="cpf">CPF*</label>
             <input
               type="text"
@@ -217,7 +219,7 @@ const PerfilAluno: React.FC = () => {
             />
           </div>
 
-          <div className="form-group">
+          <div className={styles.formGroup}>
             <label htmlFor="dataNascimento">Data de Nascimento*</label>
             <input
               type="date"
@@ -230,7 +232,7 @@ const PerfilAluno: React.FC = () => {
           </div>
         </div>
 
-        <div className="form-group">
+        <div className={styles.formGroup}>
           <label htmlFor="email">E-mail*</label>
           <input
             type="email"
@@ -243,8 +245,8 @@ const PerfilAluno: React.FC = () => {
           />
         </div>
 
-        <div className="form-row">
-          <div className="form-group">
+        <div className={styles.formRow}>
+          <div className={styles.formGroup}>
             <label htmlFor="telefone">Telefone*</label>
             <input
               type="text"
@@ -263,7 +265,7 @@ const PerfilAluno: React.FC = () => {
             />
           </div>
 
-          <div className="form-group">
+          <div className={styles.formGroup}>
             <label htmlFor="sexo">Sexo*</label>
             <select
               id="sexo"
@@ -281,13 +283,13 @@ const PerfilAluno: React.FC = () => {
           </div>
         </div>
 
-        <div className="button-group">
-          <button type="submit" className="btn-salvar" disabled={loading}>
+        <div className={styles.buttonGroup}>
+          <button type="submit" className={styles.btnSalvar} disabled={loading}>
             {loading ? "Salvando..." : "Salvar Perfil"}
           </button>
           <button
             type="button"
-            className="btn-cancelar"
+            className={styles.btnCancelar}
             onClick={() => window.history.back()}
             disabled={loading}
           >

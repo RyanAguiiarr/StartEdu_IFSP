@@ -2,7 +2,7 @@ import * as React from "react";
 import * as Form from "@radix-ui/react-form";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import "./Login_style.css";
+import styles from "./Login_style.module.css";
 
 import { logar } from "../../services/loginService";
 
@@ -42,7 +42,7 @@ const Login = () => {
 
       // Redireciona para a página inicial após o login
       setTimeout(() => {
-        navigate("/home");
+        navigate("/");
       }, 1000);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
@@ -67,17 +67,19 @@ const Login = () => {
   };
 
   return (
-    <div className="fundo">
-      <Form.Root className="FormRoot" onSubmit={handleSubmit}>
-        <h1 className="FormTitle">Login</h1>
+    <div className={styles.fundo}>
+      <Form.Root className={styles.formRoot} onSubmit={handleSubmit}>
+        <h1 className={styles.formTitle}>Login</h1>
 
-        {error && <div className="ErrorMessage">{error}</div>}
+        {error && <div className={styles.errorMessage}>{error}</div>}
         {success && (
-          <div className="SuccessMessage">Login realizado com sucesso!</div>
+          <div className={styles.successMessage}>
+            Login realizado com sucesso!
+          </div>
         )}
 
         {/* Campo Email */}
-        <Form.Field className="FormField" name="email">
+        <Form.Field className={styles.formField} name="email">
           <div
             style={{
               display: "flex",
@@ -85,21 +87,21 @@ const Login = () => {
               justifyContent: "space-between",
             }}
           >
-            <Form.Label className="FormLabel">Email</Form.Label>
-            <Form.Message className="FormMessage" match="valueMissing">
+            <Form.Label className={styles.formLabel}>Email</Form.Label>
+            <Form.Message className={styles.formMessage} match="valueMissing">
               Por favor, informe seu email
             </Form.Message>
-            <Form.Message className="FormMessage" match="typeMismatch">
+            <Form.Message className={styles.formMessage} match="typeMismatch">
               Por favor, informe um email válido
             </Form.Message>
           </div>
           <Form.Control asChild>
-            <input className="Input" type="email" required />
+            <input className={styles.input} type="email" required />
           </Form.Control>
         </Form.Field>
 
         {/* Campo Senha */}
-        <Form.Field className="FormField" name="senha">
+        <Form.Field className={styles.formField} name="senha">
           <div
             style={{
               display: "flex",
@@ -107,26 +109,38 @@ const Login = () => {
               justifyContent: "space-between",
             }}
           >
-            <Form.Label className="FormLabel">Senha</Form.Label>
-            <Form.Message className="FormMessage" match="valueMissing">
+            <Form.Label className={styles.formLabel}>Senha</Form.Label>
+            <Form.Message className={styles.formMessage} match="valueMissing">
               Por favor, informe sua senha
             </Form.Message>
           </div>
           <Form.Control asChild>
-            <input className="Input" type="password" required minLength={6} />
+            <input
+              className={styles.input}
+              type="password"
+              required
+              minLength={6}
+            />
           </Form.Control>
         </Form.Field>
 
         {/* Links de Ajuda */}
-        <div className="FormLinks">
-          <a href="/" className="FormLink">
+        <div className={styles.formLinks}>
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("/cadastro"); // Use minúsculas para consistência
+            }}
+            className={styles.formLink}
+          >
             Não tem uma conta? Cadastre-se
           </a>
         </div>
 
         {/* Botão de Envio */}
         <Form.Submit asChild>
-          <button className="Button" disabled={loading}>
+          <button className={styles.button} disabled={loading}>
             {loading ? "Entrando..." : "Entrar"}
           </button>
         </Form.Submit>

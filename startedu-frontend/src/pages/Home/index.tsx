@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import "./Home_style.css";
+import styles from "./Home_style.module.css";
 import axios from "axios";
 import {
   tratandoImagensDeImovel,
   tratandoImoveisFicticios,
 } from "./functions/functions";
-import logoStartEdu from "../../images/logo.png";
 import { fazerLogout, obterUsuario } from "../../services/authService";
 import imagempadrao from "../../images/imovel_teste.jpg";
 
@@ -44,6 +43,8 @@ const Home = () => {
     nome: string;
     foto?: string;
   } | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [currentPage, setCurrentPage] = useState<string>("home");
 
   // Função de busca por nome do imóvel
   const buscarImoveis = async () => {
@@ -239,53 +240,61 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="airbnb-container">
+    <div className={styles.airbnbContainer}>
       {/* Navbar */}
-      <header className="navbar">
-        <div className="logo">
+      <header className={styles.navbar}>
+        <div className={styles.logo}>
           <a href="#">
-            <img src={logoStartEdu} alt="logo" />
+            {/* Remover a imagem e substituir pelo texto estilizado */}
+            <div className={styles.textLogo}>
+              <span className={styles.logoStart}>Start</span>
+              <span className={styles.logoEdu}>Edu</span>
+              <div className={styles.logoGlow}></div>
+            </div>
           </a>
         </div>
-        <nav className="nav-tabs">
-          <div className="tab active">Imóveis</div>
-          <div className="tab">Faculdades</div>
-          <div className="tab">Mais Procurados</div>
+        <nav className={styles.navTabs}>
+          <div className={`${styles.tab} ${styles.active}`}>Imóveis</div>
+          <div className={styles.tab}>Faculdades</div>
+          <div className={styles.tab}>Mais Procurados</div>
         </nav>
-        <div className="nav-actions">
+        <div className={styles.navActions}>
           <button
-            className="btn-anunciar"
+            className={styles.btnAnunciar}
             onClick={() => (window.location.href = "/imovel")}
             title="Anunciar um novo imóvel"
           >
-            <span className="btn-icon">+</span>
-            <span className="btn-text">Anunciar Imóvel</span>
+            <span className={styles.btnIcon}>+</span>
+            <span className={styles.btnText}>Anunciar Imóvel</span>
           </button>
-          <div className="user-profile user-menu">
+          <div className={styles.userProfile}>
             {usuario ? (
-              <>
+              <div className={styles.userMenu}>
                 <div
-                  className="profile-pic"
+                  className={styles.profilePic}
                   style={{
-                    backgroundImage: `url(${usuario.foto})`,
+                    backgroundImage: `url(${
+                      usuario.foto ||
+                      "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTYgMjU2Ij48cmVjdCB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgZmlsbD0iIzRhMDJiNCIvPjxjaXJjbGUgY3g9IjEyOCIgY3k9Ijk2IiByPSI0MCIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik0yMTYsMTg0LjVjMC00OC42LTM5LjQtODgtODgtODhzLTg4LDM5LjQtODgsODhjMCw4LjMsMS4yLDE2LjMsMy4zLDI0YzQuOCwxNS43LDEzLjcsMjkuNSwyNS45LDQwLjJsNS40LDQuNUg5NmwxMTIsMC4ybDEwLjktMC43QzIzMS43LDI0MC40LDI0NCwyMTMuOSwyNDQsMTg0LjVDMjQ0LDE4NC41LDIxNiwxODQuNSwyMTYsMTg0LjV6IiBmaWxsPSIjZmZmIi8+PC9zdmc+"
+                    })`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                   }}
                   title={usuario.nome}
                 />
-                <div className="dropdown-menu">
-                  <div className="dropdown-item">
+                <div className={styles.dropdownMenu}>
+                  <div className={styles.dropdownItem}>
                     Olá, {usuario.nome.split(" ")[0]}
                   </div>
-                  <div className="dropdown-divider"></div>
+                  <div className={styles.dropdownDivider}></div>
                   <div
-                    className="dropdown-item"
+                    className={styles.dropdownItem}
                     onClick={() => (window.location.href = "/aluno")}
                   >
                     Editar Perfil
                   </div>
                   <div
-                    className="dropdown-item"
+                    className={styles.dropdownItem}
                     onClick={() => {
                       fazerLogout();
                       window.location.reload();
@@ -294,11 +303,11 @@ const Home = () => {
                     Sair
                   </div>
                 </div>
-              </>
+              </div>
             ) : (
               <div
-                className="profile-pic"
-                onClick={() => (window.location.href = "/aluno")}
+                className={styles.profilePic}
+                onClick={() => (window.location.href = "/login")}
                 title="Fazer login ou cadastro"
               />
             )}
@@ -307,15 +316,17 @@ const Home = () => {
       </header>
 
       {/* View types and filters */}
-      <div className="view-controls">
-        <div className="view-types"></div>
+      <div className={styles.viewControls}>
+        <div className={styles.viewTypes}></div>
 
-        <div className="search-bar">
-          <div className="search-item search-input-container">
-            <span className="search-icon">🔍</span>
+        <div className={styles.searchBar}>
+          <div
+            className={`${styles.searchItem} ${styles.searchInputContainer}`}
+          >
+            <span className={styles.searchIcon}>🔍</span>
             <input
               type="text"
-              className="search-input"
+              className={styles.searchInput}
               placeholder="Procurar acomodações"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -325,33 +336,33 @@ const Home = () => {
                 }
               }}
             />
-            <button className="search-button" onClick={buscarImoveis}>
+            <button className={styles.searchButton} onClick={buscarImoveis}>
               Buscar
             </button>
           </div>
-          <div className="divider"></div>
-          <div className="search-item">
+          <div className={styles.divider}></div>
+          <div className={styles.searchItem}>
             <span>14 - 21 de junho</span>
           </div>
 
-          <div className="divider"></div>
-          <div className="search-item guests">
+          <div className={styles.divider}></div>
+          <div className={`${styles.searchItem} ${styles.guests}`}>
             <button
-              className="decrease"
+              className={styles.decrease}
               onClick={() => setGuestCount(Math.max(1, guestCount - 1))}
             >
               -
             </button>
             <span>{guestCount} hóspedes</span>
             <button
-              className="increase"
+              className={styles.increase}
               onClick={() => setGuestCount(guestCount + 1)}
             >
               +
             </button>
           </div>
-          <button className="filter-button">
-            <span className="icon">⋮</span>
+          <button className={styles.filterButton}>
+            <span className={styles.icon}>⋮</span>
           </button>
         </div>
       </div>
@@ -359,14 +370,14 @@ const Home = () => {
       {/* Sidebar navigation */}
 
       {/* Main content - listings grid */}
-      <div className="listings-grid">
+      <div className={styles.listingsGrid}>
         {loading ? (
-          <div className="loading-message">Carregando imóveis...</div>
+          <div className={styles.loadingMessage}>Carregando imóveis...</div>
         ) : (
           listings.map((item, index) => (
-            <div className="listing-card" key={item.id || index}>
+            <div className={styles.listingCard} key={item.id || index}>
               <div
-                className="card-image"
+                className={styles.cardImage}
                 style={{
                   backgroundImage: `url(${
                     typeof item.image === "string"
@@ -375,23 +386,23 @@ const Home = () => {
                   })`,
                 }}
               >
-                <button className="favorite-btn">♡</button>
+                <button className={styles.favoriteBtn}>♡</button>
               </div>
-              <div className="card-content">
-                <div className="card-header">
+              <div className={styles.cardContent}>
+                <div className={styles.cardHeader}>
                   <h3>{item.title || item.nome}</h3>
-                  <div className="rating">
-                    <span className="star">★</span>
+                  <div className={styles.rating}>
+                    <span className={styles.star}>★</span>
                     <span>{item.rating || "4.5"}</span>
                   </div>
                 </div>
-                <p className="location">
+                <p className={styles.location}>
                   {item.localizacao ||
                     `${item.endereco || ""}, ${item.numero || ""}`}
                 </p>
 
                 {/* Exibir detalhes adicionais se disponíveis */}
-                <p className="details">
+                <p className={styles.details}>
                   {item.num_quartos !== undefined &&
                     `${item.num_quartos} quarto(s)`}
                   {item.num_quartos !== undefined &&
@@ -407,7 +418,7 @@ const Home = () => {
                     (item.mobiliado ? "Mobiliado" : "Não mobiliado")}
                 </p>
 
-                <p className="price">
+                <p className={styles.price}>
                   <strong>{item.preco || "R$ --"}</strong> / diária
                 </p>
               </div>
@@ -417,7 +428,7 @@ const Home = () => {
       </div>
 
       {/* Footer */}
-      <div className="made-in">
+      <div className={styles.madeIn}>
         <span>Desenvolvido por StartEdu</span>
       </div>
     </div>

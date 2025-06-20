@@ -2,7 +2,7 @@
 import { useState } from "react";
 import type { FormEvent, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import "./CadastroImovel_style.css";
+import styles from "./CadastroImovel_style.module.css";
 import { cadastrarImovel } from "../../services/cadastrarImovelService";
 
 interface ImovelData {
@@ -186,17 +186,19 @@ export function CadastroImovel() {
   };
 
   return (
-    <div className="fundo">
-      <div className="cadastro-imovel-container">
+    <div className={styles.fundo}>
+      <div className={styles.cadastroImovelContainer}>
         <h1>Cadastro de Imóvel</h1>
 
         {mensagem.texto && (
-          <div className={`mensagem ${mensagem.tipo}`}>{mensagem.texto}</div>
+          <div className={`${styles.mensagem} ${styles[mensagem.tipo]}`}>
+            {mensagem.texto}
+          </div>
         )}
 
-        <form onSubmit={handleSubmit} className="form-cadastro-imovel">
+        <form onSubmit={handleSubmit} className={styles.formCadastroImovel}>
           {/* Campos existentes */}
-          <div className="form-group">
+          <div className={styles.formGroup}>
             <label htmlFor="nome">Nome do Imóvel*</label>
             <input
               type="text"
@@ -209,8 +211,8 @@ export function CadastroImovel() {
             />
           </div>
 
-          <div className="form-row">
-            <div className="form-group">
+          <div className={styles.formRow}>
+            <div className={styles.formGroup}>
               <label htmlFor="endereco">Endereço*</label>
               <input
                 type="text"
@@ -223,7 +225,7 @@ export function CadastroImovel() {
               />
             </div>
 
-            <div className="form-group small">
+            <div className={`${styles.formGroup} ${styles.small}`}>
               <label htmlFor="numero">Número*</label>
               <input
                 type="text"
@@ -237,7 +239,7 @@ export function CadastroImovel() {
             </div>
           </div>
 
-          <div className="form-group">
+          <div className={styles.formGroup}>
             <label htmlFor="descricao">Descrição</label>
             <textarea
               id="descricao"
@@ -250,8 +252,8 @@ export function CadastroImovel() {
           </div>
 
           {/* Campos numéricos com valores máximos */}
-          <div className="form-row">
-            <div className="form-group">
+          <div className={styles.formRow}>
+            <div className={styles.formGroup}>
               <label htmlFor="num_quartos">Número de Quartos*</label>
               <input
                 type="number"
@@ -263,10 +265,10 @@ export function CadastroImovel() {
                 onChange={handleChange}
                 required
               />
-              <small className="form-hint">Máximo: 127</small>
+              <small className={styles.formHint}>Máximo: 127</small>
             </div>
 
-            <div className="form-group">
+            <div className={styles.formGroup}>
               <label htmlFor="num_banheiros">Número de Banheiros*</label>
               <input
                 type="number"
@@ -278,15 +280,15 @@ export function CadastroImovel() {
                 onChange={handleChange}
                 required
               />
-              <small className="form-hint">Máximo: 127</small>
+              <small className={styles.formHint}>Máximo: 127</small>
             </div>
           </div>
 
           {/* Novo campo para upload de imagens */}
-          <div className="form-group">
+          <div className={styles.formGroup}>
             <label htmlFor="imagens">Imagens do Imóvel</label>
-            <div className="imagem-upload-container">
-              <label htmlFor="imagens" className="imagem-upload-label">
+            <div className={styles.imagemUploadContainer}>
+              <label htmlFor="imagens" className={styles.imagemUploadLabel}>
                 <span>Escolher imagens</span>
                 <input
                   type="file"
@@ -295,28 +297,28 @@ export function CadastroImovel() {
                   accept="image/*"
                   multiple
                   onChange={handleImagemChange}
-                  className="imagem-input"
+                  className={styles.imagemInput}
                 />
               </label>
-              <span className="imagem-info">
+              <span className={styles.imagemInfo}>
                 Formatos aceitos: JPG, PNG. Máx: 5MB
               </span>
             </div>
 
             {/* Preview das imagens */}
             {imagensPreview.length > 0 && (
-              <div className="imagens-preview">
+              <div className={styles.imagensPreview}>
                 {imagensPreview.map((preview, index) => (
-                  <div key={index} className="imagem-preview-container">
+                  <div key={index} className={styles.imagemPreviewContainer}>
                     <img
                       src={preview}
                       alt={`Preview ${index + 1}`}
-                      className="imagem-preview"
+                      className={styles.imagemPreview}
                     />
                     <button
                       type="button"
                       onClick={() => removerImagem(index)}
-                      className="remover-imagem"
+                      className={styles.removerImagem}
                     >
                       &times;
                     </button>
@@ -327,8 +329,8 @@ export function CadastroImovel() {
           </div>
 
           {/* Checkboxes */}
-          <div className="form-row checkbox-row">
-            <div className="form-group checkbox">
+          <div className={`${styles.formRow} ${styles.checkboxRow}`}>
+            <div className={`${styles.formGroup} ${styles.checkbox}`}>
               <input
                 type="checkbox"
                 id="mobiliado"
@@ -339,7 +341,7 @@ export function CadastroImovel() {
               <label htmlFor="mobiliado">Mobiliado</label>
             </div>
 
-            <div className="form-group checkbox">
+            <div className={`${styles.formGroup} ${styles.checkbox}`}>
               <input
                 type="checkbox"
                 id="status"
@@ -351,13 +353,13 @@ export function CadastroImovel() {
             </div>
           </div>
 
-          <div className="button-group">
-            <button type="submit" className="btn-cadastrar">
+          <div className={styles.buttonGroup}>
+            <button type="submit" className={styles.btnCadastrar}>
               Cadastrar Imóvel
             </button>
             <button
               type="button"
-              className="btn-cancelar"
+              className={styles.btnCancelar}
               onClick={() => window.history.back()}
             >
               Cancelar

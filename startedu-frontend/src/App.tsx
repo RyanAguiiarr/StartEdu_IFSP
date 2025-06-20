@@ -1,17 +1,19 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Cadastro from "./pages/Cadastro";
-import CadastroImovel from "./pages/CadastroImovel";
+import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Aluno from "./pages/Aluno";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import CadastroImovel from "./pages/CadastroImovel";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Cadastro />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/imovel" element={<CadastroImovel />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/cadastro" element={<Cadastro />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/aluno" element={<Aluno />} />
+        <Route path="/imovel" element={<CadastroImovel />} />
       </Routes>
     </BrowserRouter>
   );

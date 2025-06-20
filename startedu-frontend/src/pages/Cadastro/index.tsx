@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { cadastrar } from "../../services/cadastroService";
 import { logar } from "../../services/loginService"; // Importe o serviço de login
-import "./Cadastro_style.css";
+import styles from "./Cadastro_style.module.css";
 
 const Cadastro = () => {
   const [searchParams] = useSearchParams();
@@ -48,7 +48,7 @@ const Cadastro = () => {
       const response = await cadastrar(userData);
       console.log("Resposta da API:", response);
       setSuccess(true);
-      navigate("/home"); // Redireciona para a página inicial após o cadastro
+      navigate("/"); // Redireciona para a página inicial após o cadastro
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
@@ -107,16 +107,18 @@ const Cadastro = () => {
   };
 
   return (
-    <div className="fundo">
+    <div className={styles.fundo}>
       <Form.Root
-        className="FormRoot"
+        className={styles.formRoot}
         onSubmit={isLoginMode ? handleLogin : handleCadastro}
       >
-        <h1 className="FormTitle">{isLoginMode ? "Login" : "Cadastre-se"}</h1>
+        <h1 className={styles.formTitle}>
+          {isLoginMode ? "Login" : "Cadastre-se"}
+        </h1>
 
-        {error && <div className="ErrorMessage">{error}</div>}
+        {error && <div className={styles.errorMessage}>{error}</div>}
         {success && (
-          <div className="SuccessMessage">
+          <div className={styles.successMessage}>
             {isLoginMode
               ? "Login realizado com sucesso!"
               : "Cadastro realizado com sucesso!"}
@@ -125,7 +127,7 @@ const Cadastro = () => {
 
         {/* Campos compartilhados */}
         {/* Campo Email */}
-        <Form.Field className="FormField" name="email">
+        <Form.Field className={styles.formField} name="email">
           <div
             style={{
               display: "flex",
@@ -133,21 +135,21 @@ const Cadastro = () => {
               justifyContent: "space-between",
             }}
           >
-            <Form.Label className="FormLabel">Email</Form.Label>
-            <Form.Message className="FormMessage" match="valueMissing">
+            <Form.Label className={styles.formLabel}>Email</Form.Label>
+            <Form.Message className={styles.formMessage} match="valueMissing">
               Por favor, informe seu email
             </Form.Message>
-            <Form.Message className="FormMessage" match="typeMismatch">
+            <Form.Message className={styles.formMessage} match="typeMismatch">
               Por favor, informe um email válido
             </Form.Message>
           </div>
           <Form.Control asChild>
-            <input className="Input" type="email" required />
+            <input className={styles.input} type="email" required />
           </Form.Control>
         </Form.Field>
 
         {/* Campo Senha */}
-        <Form.Field className="FormField" name="senha">
+        <Form.Field className={styles.formField} name="senha">
           <div
             style={{
               display: "flex",
@@ -155,16 +157,21 @@ const Cadastro = () => {
               justifyContent: "space-between",
             }}
           >
-            <Form.Label className="FormLabel">Senha</Form.Label>
-            <Form.Message className="FormMessage" match="valueMissing">
+            <Form.Label className={styles.formLabel}>Senha</Form.Label>
+            <Form.Message className={styles.formMessage} match="valueMissing">
               Por favor, informe sua senha
             </Form.Message>
           </div>
           <Form.Control asChild>
-            <input className="Input" type="password" required minLength={6} />
+            <input
+              className={styles.input}
+              type="password"
+              required
+              minLength={6}
+            />
           </Form.Control>
           {!isLoginMode && (
-            <p className="FormHint">
+            <p className={styles.formHint}>
               A senha deve conter pelo menos 6 caracteres
             </p>
           )}
@@ -174,7 +181,7 @@ const Cadastro = () => {
         {!isLoginMode && (
           <>
             {/* Campo Nome */}
-            <Form.Field className="FormField" name="nome">
+            <Form.Field className={styles.formField} name="nome">
               <div
                 style={{
                   display: "flex",
@@ -182,18 +189,21 @@ const Cadastro = () => {
                   justifyContent: "space-between",
                 }}
               >
-                <Form.Label className="FormLabel">Nome</Form.Label>
-                <Form.Message className="FormMessage" match="valueMissing">
+                <Form.Label className={styles.formLabel}>Nome</Form.Label>
+                <Form.Message
+                  className={styles.formMessage}
+                  match="valueMissing"
+                >
                   Por favor, informe seu nome
                 </Form.Message>
               </div>
               <Form.Control asChild>
-                <input className="Input" type="text" required />
+                <input className={styles.input} type="text" required />
               </Form.Control>
             </Form.Field>
 
             {/* Campo Tipo de Usuário */}
-            <Form.Field className="FormField" name="tipoUsuario">
+            <Form.Field className={styles.formField} name="tipoUsuario">
               <div
                 style={{
                   display: "flex",
@@ -201,13 +211,18 @@ const Cadastro = () => {
                   justifyContent: "space-between",
                 }}
               >
-                <Form.Label className="FormLabel">Tipo de Usuário</Form.Label>
-                <Form.Message className="FormMessage" match="valueMissing">
+                <Form.Label className={styles.formLabel}>
+                  Tipo de Usuário
+                </Form.Label>
+                <Form.Message
+                  className={styles.formMessage}
+                  match="valueMissing"
+                >
                   Por favor, selecione o tipo de usuário
                 </Form.Message>
               </div>
               <Form.Control asChild>
-                <select className="Input" required defaultValue="">
+                <select className={styles.input} required defaultValue="">
                   <option value="" disabled>
                     Selecione uma opção
                   </option>
@@ -220,13 +235,27 @@ const Cadastro = () => {
         )}
 
         {/* Links de Ajuda */}
-        <div className="FormLinks">
+        <div className={styles.formLinks}>
           {isLoginMode ? (
-            <a href="/" className="FormLink">
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                navigate("/cadastro"); // Use minúsculas para consistência
+              }}
+              className={styles.formLink}
+            >
               Não tem uma conta? Cadastre-se
             </a>
           ) : (
-            <a href="/?mode=login" className="FormLink">
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                navigate("/login");
+              }}
+              className={styles.formLink}
+            >
               Já tem uma conta? Logar
             </a>
           )}
@@ -234,7 +263,7 @@ const Cadastro = () => {
 
         {/* Botão de Envio */}
         <Form.Submit asChild>
-          <button className="Button" disabled={loading}>
+          <button className={styles.button} disabled={loading}>
             {isLoginMode
               ? loading
                 ? "Entrando..."

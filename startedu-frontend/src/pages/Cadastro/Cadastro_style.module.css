@@ -1,0 +1,285 @@
+@import "@radix-ui/colors/violet.css";
+@import "@radix-ui/colors/mauve.css";
+
+/* Cores e variáveis personalizadas */
+:root {
+  --primary-color: #4f46e5;
+  --primary-hover: #4338ca;
+  --bg-color: #f9fafb;
+  --text-color: #1f2937;
+  --error-color: #ef4444;
+  --input-bg: #ffffff;
+  --input-border: #d1d5db;
+  --input-focus: #4f46e5;
+  --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Fundo e container principal */
+.fundo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(135deg, #1a1033 0%, #2e1a4a 50%, #1a1033 100%);
+  background-size: cover;
+  padding: 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Efeitos de fundo */
+.fundo::before,
+.fundo::after {
+  content: "";
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  opacity: 0.15;
+  filter: blur(120px);
+}
+
+.fundo::before {
+  background: #ff6a3d;
+  top: -100px;
+  right: -50px;
+  animation: float 15s infinite alternate ease-in-out;
+}
+
+.fundo::after {
+  background: #4a02b4;
+  bottom: -100px;
+  left: -50px;
+  animation: float 18s infinite alternate-reverse ease-in-out;
+}
+
+@keyframes float {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    transform: translate(50px, 50px) scale(1.2);
+  }
+}
+
+.formRoot {
+  width: 100%;
+  max-width: 450px;
+  padding: 40px 38px;
+  background-color: rgba(25, 25, 37, 0.85);
+  border-radius: 16px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  z-index: 10;
+  position: relative;
+}
+
+/* Título do formulário */
+.formTitle {
+  color: white;
+  text-align: center;
+  margin-bottom: 35px;
+  font-size: 2rem;
+  font-weight: 600;
+  position: relative;
+}
+
+.formTitle::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  width: 60px;
+  height: 2px;
+  background: #ff6a3d;
+  transform: translateX(-50%);
+}
+
+/* Campos do formulário */
+.formField {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.formLabel {
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.formLabel::before {
+  content: "•";
+  color: #ff6a3d;
+  margin-right: 6px;
+  font-size: 14px;
+}
+
+.formMessage {
+  color: #ff6a3d;
+  font-size: 0.8rem;
+  margin-left: 8px;
+}
+
+.formField input,
+.formField select {
+  width: 100%;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: white;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.formField input:focus,
+.formField select:focus {
+  outline: none;
+  border-color: rgba(255, 106, 61, 0.6);
+  box-shadow: 0 0 0 1px rgba(255, 106, 61, 0.3);
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.formField input::placeholder,
+.formField select::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.formHint {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 5px;
+  margin-left: 2px;
+}
+
+/* Select customizado */
+.formField select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255, 255, 255, 0.7)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+
+.formField select option {
+  background-color: #1a1033;
+  color: white;
+  padding: 10px;
+}
+
+/* Mensagens de feedback */
+.errorMessage,
+.successMessage {
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+  text-align: center;
+  font-weight: 400;
+  font-size: 0.9rem;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.errorMessage {
+  background-color: rgba(231, 76, 60, 0.15);
+  border: 1px solid rgba(231, 76, 60, 0.3);
+  color: #ff7675;
+}
+
+.successMessage {
+  background-color: rgba(46, 204, 113, 0.15);
+  border: 1px solid rgba(46, 204, 113, 0.3);
+  color: #55efc4;
+}
+
+/* Links de navegação */
+.formLinks {
+  margin: 28px 0 20px;
+  text-align: center;
+}
+
+.formLink {
+  color: #ff6a3d;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.formLink:hover {
+  color: #ff8c66;
+  text-decoration: underline;
+}
+
+/* Botão de envio */
+.button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 8px;
+  border: none;
+  background: #ff6a3d;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.7s;
+}
+
+.button:hover:not(:disabled) {
+  background: #ff7c50;
+  transform: translateY(-1px);
+}
+
+.button:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Responsividade */
+@media (max-width: 500px) {
+  .formRoot {
+    padding: 30px 20px;
+  }
+
+  .formTitle {
+    font-size: 1.7rem;
+  }
+}
