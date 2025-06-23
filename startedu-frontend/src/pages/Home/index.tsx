@@ -7,6 +7,7 @@ import {
 } from "./functions/functions";
 import { fazerLogout, obterUsuario } from "../../services/authService";
 import imagempadrao from "../../images/imovel_teste.jpg";
+import AIAssistant from "../../components/AIAssistant/AIAssistant";
 
 // Defina uma interface para tipar os dados dos imóveis
 interface ImagemImovel {
@@ -431,6 +432,9 @@ const Home = () => {
       <div className={styles.madeIn}>
         <span>Desenvolvido por StartEdu</span>
       </div>
+
+      {/* Assistente IA */}
+      <AIAssistant />
     </div>
   );
 };

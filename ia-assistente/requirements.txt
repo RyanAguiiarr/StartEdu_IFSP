@@ -1,0 +1,8 @@
+#dependencias
+
+fastapi
+uvicorn
+langchain
+openai
+mysql-connector-python  # Se for MySQL
+python-dotenv
