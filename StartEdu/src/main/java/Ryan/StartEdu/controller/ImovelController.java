@@ -137,5 +137,28 @@ public class ImovelController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/imoveis/{id}")
+    public ResponseEntity<ImovelResponseDTO> buscarIMovelPorId(@PathVariable Long id) {
+
+        try{
+            var imovel = imovelService.buscarImovelPorId(id);
+            Map<String, Object> logData = new HashMap<>();
+            logData.put("event", "BUSCA_IMOVEL_POR_ID");
+            logData.put("imovelId", id);
+            if(imovel != null){
+                logger.info("Imóvel encontrado: {}", logData);
+                return ResponseEntity.ok(imovel);
+            }else{
+                logger.info("Imóvel não encontrado: {}", logData);
+                return ResponseEntity.notFound().build();
+            }
+        }catch (Exception e) {
+            logger.error("Erro ao buscar imóvel por ID: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
     }
 

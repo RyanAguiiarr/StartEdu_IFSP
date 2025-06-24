@@ -15,7 +15,10 @@ public class Imovel {
     private String nome;
     private String endereco;
     private String numero;
+
+    @Column(columnDefinition = "TEXT")
     private String descricao;
+
     @OneToMany(mappedBy = "imovel", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ImagemImovel> imagens = new ArrayList<>();
     private String localizacao;

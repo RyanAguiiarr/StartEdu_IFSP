@@ -78,4 +78,13 @@ public class ImovelService {
                 .map(imovel -> new ImovelResponseDTO(imovel))
                 .toList();
     }
+
+    public ImovelResponseDTO buscarImovelPorId(Long id){
+        var imovel = imovelRepository.findById(id);
+        if(imovel.isPresent()){
+            return new ImovelResponseDTO(imovel.get());
+        } else {
+             throw new RuntimeException("Imóvel não encontrado com o ID: " + id);
+        }
+    }
 }
