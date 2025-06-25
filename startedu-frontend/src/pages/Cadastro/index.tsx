@@ -32,12 +32,14 @@ const Cadastro = () => {
     console.log("email:", formData.get("email"));
     console.log("senha:", formData.get("senha"));
     console.log("tipoUsuario:", formData.get("tipoUsuario"));
+    console.log("token:", formData.get("token"));
 
     const userData = {
       nome: formData.get("nome") as string,
       email: formData.get("email") as string,
       senha: formData.get("senha") as string,
       tipoUsuario: formData.get("tipoUsuario") as string,
+      token: formData.get("token") as string | undefined, // Adiciona o token se existir
     };
 
     // Log do objeto completo

@@ -4,11 +4,22 @@ import { salvarUsuario } from "./authService";
 interface UserData {
   email: string;
   senha: string;
+  token?: string;
 }
 
 // Adicionar log para depuração
-export const logar = (userData: UserData) => {
+export const logar = async (userData: UserData) => {
   console.log("Chamando API com dados:", userData);
-  salvarUsuario(userData);
-  return api.post("/auth/login", userData);
+  const response = await api.post("/auth/login", userData);
+  if (
+    response &&
+    response.data &&
+    typeof response.data === "object" &&
+    "token" in response.data
+  ) {
+    console.log("Login realizado com sucesso:", response);
+    userData.token = (response.data as { token: string }).token;
+    salvarUsuario(userData);
+  }
+  return response;
 };

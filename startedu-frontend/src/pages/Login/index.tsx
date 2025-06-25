@@ -25,10 +25,12 @@ const Login = () => {
     // Log para verificar se os dados estão sendo coletados corretamente
     console.log("email:", formData.get("email"));
     console.log("senha:", formData.get("senha"));
+    console.log("token:", formData.get("token"));
 
     const loginData = {
       email: formData.get("email") as string,
       senha: formData.get("senha") as string,
+      token: formData.get("token") as string | undefined,
     };
 
     // Log do objeto completo

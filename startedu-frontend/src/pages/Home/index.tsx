@@ -35,6 +35,10 @@ interface Imovel {
   rating?: string;
 }
 
+const direcionarImovel = (id: number) => {
+  window.location.href = `/imovel/${id}`;
+};
+
 const Home = () => {
   const [guestCount, setGuestCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
@@ -376,7 +380,11 @@ const Home = () => {
           <div className={styles.loadingMessage}>Carregando imóveis...</div>
         ) : (
           listings.map((item, index) => (
-            <div className={styles.listingCard} key={item.id || index}>
+            <div
+              className={styles.listingCard}
+              key={item.id || index}
+              onClick={() => direcionarImovel(item.id || index)}
+            >
               <div
                 className={styles.cardImage}
                 style={{
