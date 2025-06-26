@@ -23,6 +23,26 @@ public class AlunoController {
         this.fileStorageConfig = fileStorageConfig;
     }
 
+    @GetMapping
+    public ResponseEntity<Aluno> RetornarDadosAluno(@RequestParam String email){
+        try{
+            Aluno aluno = alunoService.retornarDadosAluno(email);
+            if (aluno != null) {
+                Map<String, Object> logData = new HashMap<>();
+                logData.put("event", "RETRIEVAL_ALUNO");
+                logData.put("alunoId", aluno.getId());
+                logger.info("Dados do aluno recuperados com sucesso: {}", logData);
+                return ResponseEntity.ok(aluno);
+            } else {
+                logger.error("Aluno não encontrado com o email: {}", email);
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            logger.error("Erro ao recuperar dados do aluno: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     @PostMapping
     public ResponseEntity<Aluno> CadastrarAluno(@ModelAttribute Aluno aluno, @RequestParam(value = "imagen", required = false) MultipartFile foto){
         try{

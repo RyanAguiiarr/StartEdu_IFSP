@@ -23,6 +23,13 @@ public class AlunoService {
         this.fileStorageConfig = fileStorageConfig;
     }
 
+    public Aluno retornarDadosAluno(String email){
+        var aluno = alunoRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado com o email: " + email));
+
+        return aluno;
+    }
+
     public Aluno CadastrarAluno(Aluno aluno, MultipartFile foto){
         Aluno alunoNovo = new Aluno();
         alunoNovo.setNome(aluno.getNome());

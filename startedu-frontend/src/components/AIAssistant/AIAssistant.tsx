@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import styles from "./AIAssistant_style.module.css";
 import { obterUsuario } from "../../services/authService";
+// Importar a imagem do logo
+import logoIAAssistente from "../../images/logo_chatIA.png";
 
 interface Message {
   text: string;
@@ -139,7 +141,12 @@ const AIAssistant: React.FC = () => {
           <div className={styles.chatHeader}>
             <div className={styles.chatTitle}>
               <div className={styles.assistantAvatar}>
-                <div className={styles.avatarPulse}></div>
+                {/* Usar a mesma imagem no avatar do chat */}
+                <img
+                  src={logoIAAssistente}
+                  alt="AI"
+                  className={styles.avatarImage}
+                />
               </div>
               <h3>Assistente StartEdu</h3>
             </div>
@@ -256,75 +263,14 @@ const AIAssistant: React.FC = () => {
         ) : (
           <>
             <div className={styles.buttonIcon}>
-              <div className={styles.holoCore}></div>
-              <div className={styles.holoRing}></div>
-              <div className={styles.holoRing}></div>
-
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3ZM12 7C9.23858 7 7 9.23858 7 12C7 14.7614 9.23858 17 12 17C14.7614 17 17 14.7614 17 12C17 9.23858 14.7614 7 12 7Z"
-                  fill="white"
-                  fillOpacity="0.9"
-                />
-                <circle cx="12" cy="12" r="2" fill="white" />
-                <path
-                  d="M12 17V19.5"
-                  stroke="white"
-                  strokeWidth="1"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M12 4.5V7"
-                  stroke="white"
-                  strokeWidth="1"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M17 12H19.5"
-                  stroke="white"
-                  strokeWidth="1"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M4.5 12H7"
-                  stroke="white"
-                  strokeWidth="1"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M15.5355 15.5355L17.3033 17.3033"
-                  stroke="white"
-                  strokeWidth="1"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M6.6967 6.6967L8.46447 8.46447"
-                  stroke="white"
-                  strokeWidth="1"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M15.5355 8.46447L17.3033 6.6967"
-                  stroke="white"
-                  strokeWidth="1"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M6.6967 17.3033L8.46447 15.5355"
-                  stroke="white"
-                  strokeWidth="1"
-                  strokeLinecap="round"
-                />
-              </svg>
+              {/* Substituir o SVG e os elementos de efeito pela imagem */}
+              <img
+                src={logoIAAssistente}
+                alt="AI Assistant"
+                className={styles.aiLogoImage}
+              />
             </div>
+            {/* Manter o texto, mas será escondido no CSS para o tamanho compacto */}
             <span className={styles.buttonText}>Assistente IA</span>
           </>
         )}
