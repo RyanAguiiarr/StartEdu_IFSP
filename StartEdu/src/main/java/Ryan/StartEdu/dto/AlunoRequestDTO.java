@@ -1,5 +1,6 @@
 package Ryan.StartEdu.dto;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 
 import java.util.Date;
@@ -12,6 +13,7 @@ public class AlunoRequestDTO {
     private String telefone;
     private Date dataNascimento;
     private String sexo;
+    @Column(nullable = true)
     private String cursoId;
 
     public String getNome() {

@@ -27,7 +27,6 @@ public class Turma {
             joinColumns = @JoinColumn(name = "turma_id"),
             inverseJoinColumns = @JoinColumn(name = "campus_id")
     )
-    private List<Campus> campus_id;
 
     public Long getId() {
         return id;
@@ -53,11 +52,4 @@ public class Turma {
         this.alunos = alunos;
     }
 
-    public List<Campus> getCampus_id() {
-        return campus_id;
-    }
-
-    public void setCampus_id(List<Campus> campus_id) {
-        this.campus_id = campus_id;
-    }
 }

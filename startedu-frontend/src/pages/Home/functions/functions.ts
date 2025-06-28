@@ -31,7 +31,7 @@ async function tratandoImagensDeImovel(response: any) {
       ) {
         // Extrair o nome do arquivo do caminho completo
         const caminhoCompleto = imovel.imagens[0];
-        const filename = caminhoCompleto.split("\\").pop(); // Separa pelo caractere de barra invertida
+        const filename = caminhoCompleto.split("/").pop(); // Separa pelo caractere de barra invertida
         if (filename) {
           imageUrl = `http://localhost:8080/imovel/images/${filename}`;
           console.log(`URL da imagem formatada: ${imageUrl}`);

@@ -1,5 +1,7 @@
 package Ryan.StartEdu.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,7 @@ public class ImagemImovel {
 
     @ManyToOne
     @JoinColumn(name = "imovel_id")
+    @JsonBackReference
     private Imovel imovel;
 
     // Getters e setters

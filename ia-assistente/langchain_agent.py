@@ -9,7 +9,7 @@ user_memory = {}
 
 # 🔥 IA rodando no Ollama local
 llm = ChatOllama(
-    model="llama3",  # Pode ser 'llama3', 'mistral', 'phi3', 'gemma'
+    model="gemma:2b",  # Pode ser 'llama3', 'mistral', 'phi3', 'gemma'
     temperature=0.2
 )
 
@@ -124,7 +124,7 @@ def get_system_data():
 
     cursor = connection.cursor(dictionary=True)
     data = {}
-    
+
     try:
         # Consulta imóveis
         cursor.execute("""
@@ -133,31 +133,31 @@ def get_system_data():
             FROM imovel
         """)
         data['imoveis'] = cursor.fetchall()
-        
+
         # Consulta alunos
         cursor.execute("""
             SELECT a.id, a.nome, a.email, a.telefone, a.sexo
             FROM aluno a
         """)
         data['alunos'] = cursor.fetchall()
-        
+
         # Consulta cursos
         cursor.execute("""
             SELECT id, nome, sigla
             FROM curso
         """)
         data['cursos'] = cursor.fetchall()
-        
+
         # Consulta campus
         cursor.execute("""
             SELECT id, nome, endereco, telefone, email
             FROM campus
         """)
         data['campus'] = cursor.fetchall()
-        
+
         # Formata os dados para o prompt
         result = "DADOS DO SISTEMA:\n\n"
-        
+
         # Imóveis
         result += "IMÓVEIS:\n"
         for imovel in data['imoveis']:
@@ -165,22 +165,22 @@ def get_system_data():
             result += f"Quartos: {imovel['num_quartos']} | Banheiros: {imovel['num_banheiros']} | "
             result += f"Preço: R$ {imovel['preco']} | Mobiliado: {'Sim' if imovel['mobiliado'] else 'Não'}\n"
             result += f"Descrição: {imovel['descricao']}\n"
-        
+
         # Alunos (com informações limitadas por privacidade)
         result += "\nALUNOS:\n"
         for aluno in data['alunos']:
             result += f" Nome: {aluno['nome']} | Contato: {aluno['email']}\n"
-        
+
         # Cursos
         result += "\nCURSOS:\n"
         for curso in data['cursos']:
             result += f" Nome: {curso['nome']} | Sigla: {curso['sigla']}\n"
-        
+
         # Campus
         result += "\nCAMPUS:\n"
         for campus in data['campus']:
             result += f"Nome: {campus['nome']} | Endereço: {campus['endereco']} | Contato: {campus['email']}\n"
-        
+
         return result
 
     except Exception as e:

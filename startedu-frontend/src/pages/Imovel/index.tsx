@@ -104,14 +104,14 @@ const DetalheImovel: React.FC = () => {
           // Processamento baseado no tipo de imagens recebido
           if (typeof data.imagens[0] === "string") {
             for (const caminhoCompleto of data.imagens as string[]) {
-              const filename = caminhoCompleto.split("\\").pop() || "";
+              const filename = caminhoCompleto.split("/").pop() || "";
               const imageUrl = `http://localhost:8080/imovel/images/${filename}`;
               imagensProcessadas.push(imageUrl);
             }
           } else {
             for (const img of data.imagens as ImagemImovel[]) {
               const caminhoCompleto = img.url;
-              const filename = caminhoCompleto.split("\\").pop() || "";
+              const filename = caminhoCompleto.split("/").pop() || "";
               const imageUrl = `http://localhost:8080/imovel/images/${filename}`;
               imagensProcessadas.push(imageUrl);
             }

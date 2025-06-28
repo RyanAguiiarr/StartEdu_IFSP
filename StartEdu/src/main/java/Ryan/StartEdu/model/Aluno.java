@@ -31,7 +31,6 @@ public class Aluno {
             joinColumns = @JoinColumn(name = "aluno_id"),
             inverseJoinColumns = @JoinColumn(name = "curso_id")
     )
-    private List<Curso> curso_id;
     @OneToOne
     private Cadastro cadastro_id;
 
@@ -99,13 +98,6 @@ public class Aluno {
         this.sexo = sexo;
     }
 
-    public List<Curso> getCurso_id() {
-        return curso_id;
-    }
-
-    public void setCurso_id(List<Curso> curso_id) {
-        this.curso_id = curso_id;
-    }
 
     public Cadastro getCadastro_id() {
         return cadastro_id;

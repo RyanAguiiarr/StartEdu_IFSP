@@ -78,8 +78,9 @@ const PerfilAluno: React.FC = () => {
         formData.append("imagen", foto);
       }
 
+
       let response;
-      if (obterUsuario()) {
+      if (obterUsuario() && obterUsuario()?.foto) {
         response = await axios.put("http://localhost:8080/aluno", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
