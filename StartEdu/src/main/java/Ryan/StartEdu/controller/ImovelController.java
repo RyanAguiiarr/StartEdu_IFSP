@@ -5,6 +5,7 @@ import Ryan.StartEdu.dto.ImovelRequestDTO;
 import Ryan.StartEdu.dto.ImovelResponseDTO;
 import Ryan.StartEdu.model.Imovel;
 import Ryan.StartEdu.service.ImovelService;
+import jakarta.validation.Valid;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -36,7 +37,10 @@ public class ImovelController {
     }
 
     @PostMapping
-    public ResponseEntity<ImovelResponseDTO> cadastrarImovel(@ModelAttribute ImovelRequestDTO imovelRequestDTO, @RequestParam(value = "imagens", required = false) List<MultipartFile> imagens) {
+    public ResponseEntity<ImovelResponseDTO> cadastrarImovel(
+            @Valid @ModelAttribute ImovelRequestDTO imovelRequestDTO,
+            @RequestParam(value = "imagens", required = false) List<MultipartFile> imagens
+    ) {
 
 
         try {

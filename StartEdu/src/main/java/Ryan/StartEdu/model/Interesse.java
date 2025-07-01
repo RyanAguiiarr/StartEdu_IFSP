@@ -1,6 +1,7 @@
 package Ryan.StartEdu.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
 
@@ -13,10 +14,14 @@ public class Interesse {
 
     @ManyToOne
     @JoinColumn(name = "aluno_id")
+    @NotNull(message = "o campo aluno é obrigatório")
     private Aluno aluno; // Em vez de aluno_id
     @ManyToOne
+    @NotNull(message = "o campo Imovel é obrigatório")
     private Imovel imovel_id;
+    @Column(nullable = false)
     private String mensagem;
+    @Column(nullable = false)
     private Date data_interesse;
     private String status;
 

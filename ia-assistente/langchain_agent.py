@@ -9,7 +9,7 @@ user_memory = {}
 
 # 🔥 IA rodando no Ollama local
 llm = ChatOllama(
-    model="gemma:2b",  # Pode ser 'llama3', 'mistral', 'phi3', 'gemma'
+    model="llama3",  # Pode ser 'llama3', 'mistral', 'phi3', 'gemma'
     temperature=0.2
 )
 

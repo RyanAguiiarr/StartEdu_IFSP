@@ -1,12 +1,19 @@
 package Ryan.StartEdu.service;
 
 import Ryan.StartEdu.model.Aluno;
+import Ryan.StartEdu.model.ApiResponse;
 import Ryan.StartEdu.model.Imovel;
 import Ryan.StartEdu.model.Interesse;
 import Ryan.StartEdu.repository.AlunoRepository;
 import Ryan.StartEdu.repository.ImovelRepository;
 import Ryan.StartEdu.repository.InteresseRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class InteresseService {
@@ -14,6 +21,7 @@ public class InteresseService {
     private AlunoRepository alunoRepository;
     private ImovelRepository imovelRepository;
     private InteresseRepository interesseRepository;
+
 
     public InteresseService(InteresseRepository interesseRepository,
                             AlunoRepository alunoRepository,
@@ -40,5 +48,20 @@ public class InteresseService {
             System.out.println("erro ao cadastrar interesse: " + e.getMessage());
             throw new Exception("erro ao cadastrar novo interesse");
         }
+    }
+
+    public List<Interesse> listarTodosInteresses() throws Exception{
+
+        try{
+            List interesses = new ArrayList();
+            interesses = alunoRepository.findAll();
+            if(interesses.size() == 0){
+                throw new Exception("nenhum interesse encontrado");
+            }
+            return interesses;
+        }catch (Exception ex){
+            throw new Exception("erro ao buscar interesses");
+        }
+
     }
 }

@@ -10,4 +10,9 @@ export default defineConfig({
       scopeBehaviour: "local",
     },
   },
+  server: {
+    host: true, // permite conexões externas
+    allowedHosts: true, // permite qualquer domínio (ex: ngrok)
+    port: 3000,
+  },
 });
