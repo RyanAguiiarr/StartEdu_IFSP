@@ -18,11 +18,6 @@ export const logar = async (userData: UserData) => {
     "token" in response.data
   ) {
     console.log("Login realizado com sucesso:", response);
-    // obter dados do usuario do banco pelo email
-    // prcisa passar um param que é o email do usuario
-    const userResponde = await api.get(`/aluno/${userData.email}`);
-    console.log("Dados do usuário obtidos:", userResponde);
-    userData.token = (response.data as { token: string }).token;
     salvarUsuario(userData);
   }
   return response;

@@ -50,6 +50,21 @@ interface Imovel {
   localizacao?: string;
 }
 
+interface ApiResponse<T> {
+  sucesso: boolean;
+  mensagem: string;
+  dados: T;
+}
+
+interface InteresseResponse {
+  id: number;
+  aluno: { id: number };
+  imovel_id: { id: number };
+  mensagem: string;
+  data_interesse: string;
+  status: string;
+}
+
 // Constantes
 const DEFAULT_PLACEHOLDER =
   "https://via.placeholder.com/800x600?text=Sem+imagem+disponível";
@@ -81,6 +96,8 @@ const DetalheImovel: React.FC = () => {
   const [mostrarTodasFotos, setMostrarTodasFotos] = useState(false);
   const [salvo, setSalvo] = useState(false);
   const [selectedTab, setSelectedTab] = useState("fotos");
+  const [interesseEnviado, setInteresseEnviado] = useState(false);
+  const [enviandoInteresse, setEnviandoInteresse] = useState(false);
 
   // Carregamento da página
   useEffect(() => {
@@ -162,6 +179,50 @@ const DetalheImovel: React.FC = () => {
       return;
     }
     alert("Reserva solicitada com sucesso!");
+  };
+
+  const handleManifestarInteresse = async () => {
+    const usuario = obterUsuario();
+    if (!usuario) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      setEnviandoInteresse(true);
+
+      const interesseData = {
+        aluno: {
+          id: usuario.id,
+        },
+        imovel_id: {
+          id: Number(id),
+        },
+        mensagem: `Interesse manifestado pelo usuário ${usuario.nome} no imóvel ${imovel?.nome}`,
+        data_interesse: new Date(),
+        status: "PENDENTE",
+      };
+      console.log("Dados do interesse:", interesseData);
+
+      const response = await axios.post<ApiResponse<InteresseResponse>>(
+        "http://localhost:8080/interesse",
+        interesseData
+      );
+
+      if (response.data?.sucesso) {
+        setInteresseEnviado(true);
+        alert(
+          "Interesse manifestado com sucesso! O proprietário será notificado."
+        );
+      } else {
+        alert("Erro ao manifestar interesse. Tente novamente.");
+      }
+    } catch (error) {
+      console.error("Erro ao manifestar interesse:", error);
+      alert("Erro ao manifestar interesse. Tente novamente.");
+    } finally {
+      setEnviandoInteresse(false);
+    }
   };
 
   const toggleSalvar = () => setSalvo(!salvo);
@@ -566,6 +627,21 @@ const DetalheImovel: React.FC = () => {
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
               >
                 Reservar
+              </motion.button>
+
+              <motion.button
+                className={`${styles.reserveButton} ${styles.interesseButton}`}
+                onClick={handleManifestarInteresse}
+                disabled={enviandoInteresse || interesseEnviado}
+                whileHover={{ scale: interesseEnviado ? 1 : 1.03 }}
+                whileTap={{ scale: interesseEnviado ? 1 : 0.97 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
+                {enviandoInteresse
+                  ? "Enviando..."
+                  : interesseEnviado
+                  ? "✓ Interesse Enviado"
+                  : "Manifestar Interesse"}
               </motion.button>
 
               <p className={styles.noChargeText}>Você ainda não será cobrado</p>
