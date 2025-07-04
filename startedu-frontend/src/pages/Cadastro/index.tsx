@@ -30,14 +30,12 @@ const Cadastro = () => {
     // Log para verificar se os dados estão sendo coletados corretamente
     console.log("nome:", formData.get("nome"));
     console.log("email:", formData.get("email"));
-    console.log("senha:", formData.get("senha"));
     console.log("tipoUsuario:", formData.get("tipoUsuario"));
     console.log("token:", formData.get("token"));
 
     const userData = {
       nome: formData.get("nome") as string,
       email: formData.get("email") as string,
-      senha: formData.get("senha") as string,
       tipoUsuario: formData.get("tipoUsuario") as string,
       token: formData.get("token") as string | undefined, // Adiciona o token se existir
     };

@@ -9,9 +9,15 @@ export const api = axios.create({
   },
 });
 
-// Interceptor para logs de requisição
+// Interceptor para adicionar token automaticamente
 api.interceptors.request.use(
   (config) => {
+    // Adicionar token se existir
+    const token = localStorage.getItem("token");
+    if (token && config.headers) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
     console.log("Requisição enviada:", config);
     return config;
   },

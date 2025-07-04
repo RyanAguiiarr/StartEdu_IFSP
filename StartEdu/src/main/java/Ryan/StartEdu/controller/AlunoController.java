@@ -3,10 +3,18 @@ package Ryan.StartEdu.controller;
 import Ryan.StartEdu.config.FileStorageConfig;
 import Ryan.StartEdu.model.Aluno;
 import Ryan.StartEdu.service.AlunoService;
+import jakarta.validation.Valid;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,7 +52,7 @@ public class AlunoController {
     }
 
     @PostMapping
-    public ResponseEntity<Aluno> CadastrarAluno(@ModelAttribute Aluno aluno, @RequestParam(value = "imagen", required = false) MultipartFile foto){
+    public ResponseEntity<Aluno> CadastrarAluno(@Valid @ModelAttribute Aluno aluno, @RequestParam(value = "imagen", required = false) MultipartFile foto){
         try{
                if(foto == null || foto.isEmpty()){
                      logger.error("Nenhuma imagem foi enviada para o aluno: {}", aluno.getNome());
@@ -67,7 +75,7 @@ public class AlunoController {
     }
 
     @PutMapping
-    public ResponseEntity<Aluno> AtualizarAluno(@ModelAttribute Aluno aluno, @RequestParam(value = "imagen", required = false) MultipartFile foto){
+    public ResponseEntity<Aluno> AtualizarAluno(@Valid @ModelAttribute Aluno aluno, @RequestParam(value = "imagen", required = false) MultipartFile foto){
         try{
             if(foto == null || foto.isEmpty()){
                 logger.error("Nenhuma imagem foi enviada para o aluno: {}", aluno.getNome());
@@ -85,6 +93,31 @@ public class AlunoController {
             return ResponseEntity.ok(alunoAtualizado);
         } catch (Exception e) {
             logger.error("Erro ao atualizar aluno: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/images/{filename:.+}")
+    public ResponseEntity<Resource> downloadImage(@PathVariable String filename) {
+        try {
+            Path filePath;
+            try {
+                filePath = fileStorageConfig.getUploadPath().resolve(filename).normalize();
+            } catch (java.io.IOException ioException) {
+                logger.error("Erro ao obter o caminho do upload: {}", ioException.getMessage());
+                return ResponseEntity.badRequest().build();
+            }
+            Resource resource = new UrlResource(filePath.toUri());
+            
+            if (resource.exists()) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.parseMediaType("application/octet-stream"))
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                        .body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (MalformedURLException ex) {
             return ResponseEntity.badRequest().build();
         }
     }

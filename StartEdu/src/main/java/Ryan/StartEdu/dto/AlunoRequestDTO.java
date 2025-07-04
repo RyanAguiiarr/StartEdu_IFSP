@@ -2,13 +2,16 @@ package Ryan.StartEdu.dto;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.util.Date;
 
 public class AlunoRequestDTO {
 
     private String nome;
+    @Column(unique = true)
     private String cpf;
+    @Email
     private String email;
     private String telefone;
     private Date dataNascimento;

@@ -1,8 +1,13 @@
 import React, { useState, useRef } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import axios from "axios";
-import { salvarUsuario, obterUsuario } from "../../services/authService";
+import {
+  salvarUsuario,
+  obterUsuario,
+  buscarDadosUsuario,
+} from "../../services/authService";
 import styles from "./Aluno_style.module.css";
+import { validarCamposAluno } from "./functions/functions";
 
 // Usando uma imagem base64 inline (uma imagem de avatar simples em roxo)
 const defaultProfileImage =
@@ -38,6 +43,8 @@ const PerfilAluno: React.FC = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  validarCamposAluno(aluno, foto);
+
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -65,6 +72,41 @@ const PerfilAluno: React.FC = () => {
     setLoading(true);
     setMensagem(null);
 
+    // Validação dos campos obrigatórios
+    const validacao = validarCamposAluno(aluno, foto);
+    const camposInvalidos = validacao.filter((item) => !item.valido);
+
+    if (camposInvalidos.length > 0) {
+      const mensagensErro = camposInvalidos.map((item) => {
+        switch (item.campo) {
+          case "nome":
+            return `${item.nome} deve ter pelo menos 2 caracteres`;
+          case "cpf":
+            return `${item.nome} deve ter 11 dígitos`;
+          case "email":
+            return `${item.nome} deve ter um formato válido`;
+          case "telefone":
+            return `${item.nome} deve ter pelo menos 10 dígitos`;
+          case "foto":
+            return `${item.nome} é obrigatória`;
+          default:
+            return `${item.nome} é obrigatório`;
+        }
+      });
+
+      console.log("validção", validacao);
+      console.log("Campos inválidos:", mensagensErro);
+      console.log("Dados do aluno:", aluno);
+      console.log("Foto selecionada:", foto);
+
+      setMensagem({
+        tipo: "erro",
+        texto: `Verifique os seguintes campos: ${mensagensErro.join(", ")}`,
+      });
+      setLoading(false);
+      return;
+    }
+
     try {
       const formData = new FormData();
 
@@ -78,15 +120,19 @@ const PerfilAluno: React.FC = () => {
         formData.append("imagen", foto);
       }
 
-
       let response;
-      if (obterUsuario() && obterUsuario()?.foto) {
+      const usuarioLogado = obterUsuario();
+
+      // Verificar se é atualização (usuário existe) ou criação (novo usuário)
+      if (usuarioLogado && usuarioLogado.id) {
+        // Usuário já existe - fazer PUT (atualização)
         response = await axios.put("http://localhost:8080/aluno", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         });
       } else {
+        // Novo usuário - fazer POST (criação)
         response = await axios.post("http://localhost:8080/aluno", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -94,23 +140,51 @@ const PerfilAluno: React.FC = () => {
         });
       }
 
+      // se for mandado um email no formData, o backend irá atualizar o email no cadastro do alunoData
+      const emailAntigo = usuarioLogado?.email;
+      if (aluno.email && emailAntigo && aluno.email !== emailAntigo) {
+        try {
+          await axios.put(
+            `http://localhost:8080/auth`,
+            {
+              emailAntigo: emailAntigo,
+              novoEmail: aluno.email,
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          console.log("Email atualizado com sucesso no cadastro");
+        } catch (emailError) {
+          console.error("Erro ao atualizar email no cadastro:", emailError);
+          // Continua o processo mesmo se falhar a atualização do email
+        }
+      }
+
       // Obter dados do aluno da resposta
       const alunoSalvo = response.data as {
-        id: string;
-        nome: string;
-        email: string;
+        id?: string;
+        nome?: string;
+        email?: string;
         telefone?: string;
         imagem?: string;
         // adicione outros campos se necessário
       };
 
-      // Salvar dados do usuário no localStorage
-      salvarUsuario({
-        id: Number(alunoSalvo.id),
-        nome: alunoSalvo.nome,
-        email: alunoSalvo.email,
-        foto: fotoPreview || defaultProfileImage, // Salvar o preview da foto que já está em base64
-      });
+      // Buscar e salvar dados completos do usuário atualizado
+      if (alunoSalvo.email) {
+        await buscarDadosUsuario(alunoSalvo.email);
+      } else {
+        // Fallback: salvar dados básicos se não conseguir buscar dados completos
+        salvarUsuario({
+          id: Number(alunoSalvo.id),
+          nome: alunoSalvo.nome || "",
+          email: alunoSalvo.email || aluno.email || "",
+          foto: fotoPreview || defaultProfileImage,
+        });
+      }
 
       setMensagem({
         tipo: "sucesso",
@@ -121,7 +195,7 @@ const PerfilAluno: React.FC = () => {
       setTimeout(() => {
         setMensagem(null);
         // Redirecionar para a página inicial
-        window.location.href = "/home";
+        window.location.href = "/";
       }, 2000);
     } catch (error) {
       console.error("Erro ao atualizar perfil:", error);
@@ -194,11 +268,11 @@ const PerfilAluno: React.FC = () => {
           <label htmlFor="nome">Nome Completo*</label>
           <input
             type="text"
+            required
             id="nome"
             name="nome"
             value={aluno.nome}
             onChange={handleChange}
-            required
             placeholder="Ex: Maria Silva"
           />
         </div>
@@ -211,10 +285,10 @@ const PerfilAluno: React.FC = () => {
               id="cpf"
               name="cpf"
               value={aluno.cpf}
+              required
               onChange={(e) =>
                 setAluno({ ...aluno, cpf: formatarCPF(e.target.value) })
               }
-              required
               placeholder="Ex: 123.456.789-00"
               maxLength={14}
             />
@@ -227,8 +301,8 @@ const PerfilAluno: React.FC = () => {
               id="dataNascimento"
               name="dataNascimento"
               value={aluno.dataNascimento}
-              onChange={handleChange}
               required
+              onChange={handleChange}
             />
           </div>
         </div>
@@ -239,9 +313,9 @@ const PerfilAluno: React.FC = () => {
             type="email"
             id="email"
             name="email"
+            required
             value={aluno.email}
             onChange={handleChange}
-            required
             placeholder="Ex: maria@email.com"
           />
         </div>
@@ -252,6 +326,7 @@ const PerfilAluno: React.FC = () => {
             <input
               type="text"
               id="telefone"
+              required
               name="telefone"
               value={aluno.telefone}
               onChange={(e) =>
@@ -260,7 +335,6 @@ const PerfilAluno: React.FC = () => {
                   telefone: formatarTelefone(e.target.value),
                 })
               }
-              required
               placeholder="Ex: (11) 98765-4321"
               maxLength={15}
             />
@@ -270,10 +344,10 @@ const PerfilAluno: React.FC = () => {
             <label htmlFor="sexo">Sexo*</label>
             <select
               id="sexo"
+              required
               name="sexo"
               value={aluno.sexo}
               onChange={handleChange}
-              required
             >
               <option value="">Selecione</option>
               <option value="M">Masculino</option>

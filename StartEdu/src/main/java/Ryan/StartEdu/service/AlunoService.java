@@ -56,9 +56,9 @@ public class AlunoService {
                 imagemAluno.setUrl(filePath.toString());
 
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-                throw new RuntimeException("Erro ao criar diretório para upload de arquivos", e);
+                throw new RuntimeException("Erro ao cadastrar Aluno", e);
             }
         }
 
