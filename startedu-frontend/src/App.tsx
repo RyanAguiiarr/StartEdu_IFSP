@@ -8,7 +8,7 @@ import Imovel from "./pages/Imovel";
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/StartEdu_IFSP">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/cadastro" element={<Cadastro />} />
