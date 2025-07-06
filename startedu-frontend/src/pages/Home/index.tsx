@@ -436,7 +436,7 @@ const Home = () => {
 
       {/* Footer */}
       <div className={styles.madeIn}>
-        <span>Desenvolvido por StartEdu - GitHub Pages Deploy</span>
+        <span>Desenvolvido por StartEdu - Deploy Corrigido ✅</span>
       </div>
 
       {/* Assistente IA */}
