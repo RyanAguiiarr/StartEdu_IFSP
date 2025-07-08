@@ -1,0 +1,11 @@
+# Marcar corretamente linguagens
+*.js linguist-language=JavaScript
+*.tsx linguist-language=TypeScript
+*.ts linguist-language=TypeScript
+*.jsx linguist-language=JavaScript
+*.css linguist-language=CSS
+*.scss linguist-language=CSS
+*.module.css linguist-language=CSS
+
+# Ignorar arquivos Python específicos ou grandes modelos
+ia-assistente/* linguist-vendored
