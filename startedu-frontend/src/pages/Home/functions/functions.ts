@@ -1,4 +1,33 @@
 import imovelPadrao from "../../../images/imovel_teste.jpg";
+import axios from "axios";
+
+// Interface local para compatibilidade com o componente Home
+interface ImovelHome {
+  image: string;
+  id?: number;
+  nome: string;
+  endereco: string;
+  numero: string;
+  descricao: string;
+  num_quartos?: number;
+  num_banheiros?: number;
+  mobiliado?: boolean;
+  status?: boolean;
+  imagens?: string[];
+  title?: string;
+  localizacao?: string;
+  preco?: string;
+  rating?: string;
+}
+
+interface MockListing {
+  id: number;
+  image: string;
+  title: string;
+  location: string;
+  price: string;
+  rating: string;
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function tratandoImagensDeImovel(response: any) {
@@ -29,9 +58,10 @@ async function tratandoImagensDeImovel(response: any) {
         Array.isArray(imovel.imagens) &&
         typeof imovel.imagens[0] === "string"
       ) {
-        // Extrair o nome do arquivo do caminho completo
+        // Extrair o nome do arquivo do caminho completo usando uma abordagem cross-platform
         const caminhoCompleto = imovel.imagens[0];
-        const filename = caminhoCompleto.split("/").pop(); // Separa pelo caractere de barra invertida
+        // Remove tanto barras normais (/) quanto invertidas (\) para compatibilidade Windows/Linux
+        const filename = caminhoCompleto.split(/[/\\]/).pop();
         if (filename) {
           imageUrl = `http://localhost:8080/imovel/images/${filename}`;
           console.log(`URL da imagem formatada: ${imageUrl}`);
@@ -87,5 +117,89 @@ async function tratandoImoveisFicticios(mockListings: any) {
 
   return mockListings;
 }
+
+// Função de busca específica para o componente Home
+export const buscarImoveisHome = async (
+  searchQuery: string,
+  setListings: (listings: ImovelHome[]) => void,
+  setLoading: (loading: boolean) => void,
+  mockListings: MockListing[]
+) => {
+  console.log("Iniciando busca de imóveis...");
+  console.log("Termo de busca:", searchQuery);
+
+  if (!searchQuery.trim()) {
+    console.log("Termo de busca vazio, buscando todos os imóveis");
+    // Se termo vazio então busque todos os imóveis
+    try {
+      setLoading(true);
+      // Substitua pela URL correta da sua API
+      const response = await axios.get<ImovelHome[]>(
+        "http://localhost:8080/imovel"
+      );
+
+      console.log("Resposta da API:", response.data);
+
+      if (
+        (Array.isArray(response.data) && response.data.length > 0) ||
+        (typeof response.data === "object" &&
+          response.data !== null &&
+          !Array.isArray(response.data))
+      ) {
+        setListings(await tratandoImagensDeImovel(response));
+      } else {
+        // Usa dados mockados se a API retornar vazio
+        setListings(await tratandoImoveisFicticios(mockListings));
+      }
+    } catch (error) {
+      console.error("Erro ao buscar imóveis:", error);
+      // Usa dados mockados em caso de erro
+      setListings(await tratandoImoveisFicticios(mockListings));
+    } finally {
+      setLoading(false);
+    }
+    return;
+  }
+
+  try {
+    setLoading(true);
+    console.log(
+      `Fazendo requisição para: http://localhost:8080/imovel/${searchQuery}`
+    );
+
+    // Chamada da API com parâmetro de busca
+    const response = await axios.get<ImovelHome[]>(
+      `http://localhost:8080/imovel/${searchQuery}`
+    );
+
+    const imoveisFormatados = await tratandoImagensDeImovel(response);
+    if (imoveisFormatados.length > 0) {
+      setListings(await tratandoImagensDeImovel(response));
+    } else {
+      // Se não encontrar resultados
+      console.log("Nenhum imóvel encontrado na resposta da API");
+      setListings([]);
+    }
+  } catch (error) {
+    console.error("Erro ao buscar imóveis:", error);
+
+    // Log detalhado do erro
+    if (error && typeof error === "object" && "isAxiosError" in error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const axiosError = error as any;
+
+      console.error("Erro de requisição:");
+      console.error("Status:", axiosError.response?.status);
+      console.error("Dados:", axiosError.response?.data);
+      console.error("Headers:", axiosError.response?.headers);
+      console.error("Configuração:", axiosError.config);
+    }
+
+    setListings([]);
+  } finally {
+    console.log("Finalizando busca de imóveis");
+    setLoading(false);
+  }
+};
 
 export { tratandoImagensDeImovel, tratandoImoveisFicticios };

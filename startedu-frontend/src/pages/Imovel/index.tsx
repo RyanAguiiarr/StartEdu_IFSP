@@ -1,12 +1,25 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { obterUsuario } from "../../services/authService";
-import axios from "axios";
-import styles from "./Imovel_style.module.css";
 import { format } from "date-fns";
-import AIAssistant from "../../components/AIAssistant/AIAssistant";
 import { motion } from "framer-motion";
-import imagemTeste from "../../images/imovel_teste.jpg";
+import styles from "./Imovel_style.module.css";
+import AIAssistant from "../../components/AIAssistant/AIAssistant";
+
+// Importar funções auxiliares e tipos
+import type { Imovel } from "./functions/functions";
+import {
+  COMODIDADES_PADRAO,
+  processarImagensImovel,
+  carregarDadosImovel,
+  manifestarInteresse,
+  calcularPrecoTotal,
+  handleImageError,
+  verificarUsuarioLogado,
+  formatarInformacaoQuarto,
+  gerarUrlMapa,
+  criarDatasIniciais,
+  DEFAULT_IMAGE,
+} from "./functions/functions";
 
 // Ícones
 import {
@@ -28,48 +41,6 @@ import {
   FaUtensils,
 } from "react-icons/fa";
 
-// Tipos
-interface ImagemImovel {
-  id: number;
-  url: string;
-  imovel_id: number;
-}
-
-interface Imovel {
-  id?: number;
-  nome: string;
-  endereco: string;
-  numero: string;
-  descricao: string;
-  num_quartos?: number;
-  num_banheiros?: number;
-  mobiliado?: boolean;
-  status?: boolean;
-  imagens?: ImagemImovel[] | string[];
-  preco?: string;
-  localizacao?: string;
-}
-
-interface ApiResponse<T> {
-  sucesso: boolean;
-  mensagem: string;
-  dados: T;
-}
-
-interface InteresseResponse {
-  id: number;
-  aluno: { id: number };
-  imovel_id: { id: number };
-  mensagem: string;
-  data_interesse: string;
-  status: string;
-}
-
-// Constantes
-const DEFAULT_PLACEHOLDER =
-  "https://via.placeholder.com/800x600?text=Sem+imagem+disponível";
-const DEFAULT_IMAGE = imagemTeste;
-
 // Animações
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -88,10 +59,7 @@ const DetalheImovel: React.FC = () => {
   const [carregando, setCarregando] = useState(true);
   const [imagemPrincipal, setImagemPrincipal] = useState<string>("");
   const [imagens, setImagens] = useState<string[]>([]);
-  const [dataSelecionada] = useState<Date[]>([
-    new Date(),
-    new Date(new Date().setDate(new Date().getDate() + 30)),
-  ]);
+  const [dataSelecionada] = useState<Date[]>(criarDatasIniciais());
   const [qtdHospedes, setQtdHospedes] = useState(1);
   const [mostrarTodasFotos, setMostrarTodasFotos] = useState(false);
   const [salvo, setSalvo] = useState(false);
@@ -104,63 +72,29 @@ const DetalheImovel: React.FC = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Carregamento do imóvel
+  // Carregamento do imóvel - versão simplificada
   useEffect(() => {
-    const carregarImovel = async () => {
+    const buscarImovel = async () => {
+      if (!id) return;
+
       try {
         setCarregando(true);
-        const response = await axios.get(
-          `http://localhost:8080/imovel/imoveis/${id}`
+
+        // Usar função auxiliar para carregar dados
+        const dadosImovel = await carregarDadosImovel(id);
+
+        // Usar função auxiliar para processar imagens
+        const imagensProcessadas = processarImagensImovel(
+          dadosImovel.imagens || []
         );
-        const data = response.data as Imovel;
 
-        // Processamento de imagens
-        if (data.imagens && data.imagens.length > 0) {
-          const imagensProcessadas = [];
-
-          // Processamento baseado no tipo de imagens recebido
-          if (typeof data.imagens[0] === "string") {
-            for (const caminhoCompleto of data.imagens as string[]) {
-              const filename = caminhoCompleto.split("/").pop() || "";
-              const imageUrl = `http://localhost:8080/imovel/images/${filename}`;
-              imagensProcessadas.push(imageUrl);
-            }
-          } else {
-            for (const img of data.imagens as ImagemImovel[]) {
-              const caminhoCompleto = img.url;
-              const filename = caminhoCompleto.split("/").pop() || "";
-              const imageUrl = `http://localhost:8080/imovel/images/${filename}`;
-              imagensProcessadas.push(imageUrl);
-            }
-          }
-
-          // Atualização de estado com as imagens processadas
-          if (imagensProcessadas.length > 0) {
-            setImagemPrincipal(imagensProcessadas[0]);
-            setImagens(imagensProcessadas);
-
-            const imagensFormatadas = imagensProcessadas.map((url, index) => ({
-              id: index + 1,
-              url: url,
-              imovel_id: Number(id),
-            }));
-
-            setImovel({
-              ...data,
-              imagens: imagensFormatadas,
-            });
-          } else {
-            setImagemPrincipal(DEFAULT_IMAGE);
-            setImagens([DEFAULT_IMAGE]);
-            setImovel(data);
-          }
-        } else {
-          setImagemPrincipal(DEFAULT_IMAGE);
-          setImagens([DEFAULT_IMAGE]);
-          setImovel(data);
-        }
+        // Atualizar estados
+        setImovel(dadosImovel);
+        setImagens(imagensProcessadas);
+        setImagemPrincipal(imagensProcessadas[0]);
       } catch (error) {
-        console.error("Erro ao carregar detalhes do imóvel:", error);
+        console.error("Erro ao carregar imóvel:", error);
+        // Em caso de erro, usar valores padrão
         setImagemPrincipal(DEFAULT_IMAGE);
         setImagens([DEFAULT_IMAGE]);
       } finally {
@@ -168,13 +102,13 @@ const DetalheImovel: React.FC = () => {
       }
     };
 
-    carregarImovel();
+    buscarImovel();
   }, [id]);
 
-  // Funções auxiliares
+  // Funções de ação - versão simplificada
   const handleReservar = () => {
-    const usuario = obterUsuario();
-    if (!usuario) {
+    // Verificar se usuário está logado usando função auxiliar
+    if (!verificarUsuarioLogado()) {
       navigate("/login");
       return;
     }
@@ -182,34 +116,21 @@ const DetalheImovel: React.FC = () => {
   };
 
   const handleManifestarInteresse = async () => {
-    const usuario = obterUsuario();
-    if (!usuario) {
+    // Verificar se usuário está logado usando função auxiliar
+    if (!verificarUsuarioLogado()) {
       navigate("/login");
       return;
     }
 
+    if (!id || !imovel) return;
+
     try {
       setEnviandoInteresse(true);
 
-      const interesseData = {
-        aluno: {
-          id: usuario.id,
-        },
-        imovel_id: {
-          id: Number(id),
-        },
-        mensagem: `Interesse manifestado pelo usuário ${usuario.nome} no imóvel ${imovel?.nome}`,
-        data_interesse: new Date(),
-        status: "PENDENTE",
-      };
-      console.log("Dados do interesse:", interesseData);
+      // Usar função auxiliar para manifestar interesse
+      const sucesso = await manifestarInteresse(id, imovel.nome);
 
-      const response = await axios.post<ApiResponse<InteresseResponse>>(
-        "http://localhost:8080/interesse",
-        interesseData
-      );
-
-      if (response.data?.sucesso) {
+      if (sucesso) {
         setInteresseEnviado(true);
         alert(
           "Interesse manifestado com sucesso! O proprietário será notificado."
@@ -218,13 +139,29 @@ const DetalheImovel: React.FC = () => {
         alert("Erro ao manifestar interesse. Tente novamente.");
       }
     } catch (error) {
-      console.error("Erro ao manifestar interesse:", error);
+      console.error("Erro:", error);
       alert("Erro ao manifestar interesse. Tente novamente.");
     } finally {
       setEnviandoInteresse(false);
     }
   };
 
+  // Função para renderizar ícones das comodidades
+  const renderIconeComodidade = (iconName: string) => {
+    const icones: { [key: string]: React.ReactElement } = {
+      FaWifi: <FaWifi />,
+      FaSnowflake: <FaSnowflake />,
+      FaSwimmingPool: <FaSwimmingPool />,
+      FaParking: <FaParking />,
+      FaShieldAlt: <FaShieldAlt />,
+      FaUmbrellaBeach: <FaUmbrellaBeach />,
+      FaTv: <FaTv />,
+      FaUtensils: <FaUtensils />,
+    };
+    return icones[iconName] || <FaCheckCircle />;
+  };
+
+  // Outras funções auxiliares
   const toggleSalvar = () => setSalvo(!salvo);
   const toggleMostrarFotos = () => setMostrarTodasFotos(!mostrarTodasFotos);
 
@@ -236,28 +173,12 @@ const DetalheImovel: React.FC = () => {
     }
   };
 
-  const handleImageError = (
-    e: React.SyntheticEvent<HTMLImageElement, Event>
-  ) => {
-    if (e.currentTarget.src.includes("/imovel/images/")) {
-      e.currentTarget.src = DEFAULT_IMAGE;
-      e.currentTarget.onerror = null;
-    } else {
-      e.currentTarget.src = DEFAULT_PLACEHOLDER;
-      e.currentTarget.onerror = null;
-    }
-  };
-
-  // Telas de carregamento e erro
+  // Renderização condicional simplificada
   if (carregando) {
     return (
       <div className={styles.loadingContainer}>
-        <motion.div
-          className={styles.loadingSpinner}
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-        />
-        <motion.p {...fadeIn}>Carregando detalhes do imóvel...</motion.p>
+        <div className={styles.loadingSpinner}></div>
+        <p>Carregando detalhes do imóvel...</p>
       </div>
     );
   }
@@ -274,9 +195,9 @@ const DetalheImovel: React.FC = () => {
     );
   }
 
-  // Cálculo do preço total
-  const precoBase = parseInt(imovel.preco || "500");
-  const precoTotal = precoBase * 3 + 150;
+  // Cálculo do preço total usando função auxiliar
+  const precoTotal = calcularPrecoTotal(imovel?.preco || "500");
+  const precoBase = parseInt(imovel?.preco || "500");
 
   return (
     <div className={styles.pageContainer}>
@@ -431,8 +352,7 @@ const DetalheImovel: React.FC = () => {
                   >
                     <FaBed className={styles.badgeIcon} />
                     <span>
-                      {imovel.num_quartos || 1} quarto
-                      {(imovel.num_quartos || 1) > 1 ? "s" : ""}
+                      {formatarInformacaoQuarto("quarto", imovel.num_quartos)}
                     </span>
                   </motion.div>
                   <motion.div
@@ -441,8 +361,10 @@ const DetalheImovel: React.FC = () => {
                   >
                     <FaBath className={styles.badgeIcon} />
                     <span>
-                      {imovel.num_banheiros || 1} banheiro
-                      {(imovel.num_banheiros || 1) > 1 ? "s" : ""}
+                      {formatarInformacaoQuarto(
+                        "banheiro",
+                        imovel.num_banheiros
+                      )}
                     </span>
                   </motion.div>
                   {imovel.mobiliado && (
@@ -467,20 +389,7 @@ const DetalheImovel: React.FC = () => {
             >
               <h2 className={styles.sectionTitle}>O que este lugar oferece</h2>
               <div className={styles.featuresList}>
-                {[
-                  { id: 1, icon: <FaWifi />, text: "Wi-Fi de alta velocidade" },
-                  { id: 2, icon: <FaSnowflake />, text: "Ar-condicionado" },
-                  { id: 3, icon: <FaSwimmingPool />, text: "Acesso à piscina" },
-                  { id: 4, icon: <FaParking />, text: "Estacionamento" },
-                  { id: 5, icon: <FaShieldAlt />, text: "Segurança 24h" },
-                  {
-                    id: 6,
-                    icon: <FaUmbrellaBeach />,
-                    text: "Proximidade a lazer",
-                  },
-                  { id: 7, icon: <FaTv />, text: "Smart TV" },
-                  { id: 8, icon: <FaUtensils />, text: "Cozinha equipada" },
-                ].map((feature) => (
+                {COMODIDADES_PADRAO.map((feature) => (
                   <motion.div
                     key={feature.id}
                     className={styles.featureItem}
@@ -490,7 +399,7 @@ const DetalheImovel: React.FC = () => {
                     }}
                   >
                     <div className={styles.featureIconWrapper}>
-                      {feature.icon}
+                      {renderIconeComodidade(feature.icon)}
                     </div>
                     <span>{feature.text}</span>
                   </motion.div>
@@ -524,11 +433,11 @@ const DetalheImovel: React.FC = () => {
               >
                 <iframe
                   title="Localização do imóvel"
-                  src={`https://maps.google.com/maps?q=${encodeURIComponent(
-                    `${imovel.endereco}, ${imovel.numero}, ${
-                      imovel.localizacao || ""
-                    }`
-                  )}&output=embed`}
+                  src={gerarUrlMapa(
+                    imovel.endereco,
+                    imovel.numero,
+                    imovel.localizacao
+                  )}
                   width="100%"
                   height="400"
                   style={{ border: 0 }}

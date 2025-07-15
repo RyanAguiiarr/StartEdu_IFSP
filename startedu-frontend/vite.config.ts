@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: "/StartEdu_IFSP/", // Configuração para GitHub Pages
+  // Configuração para GitHub Pages
   plugins: [react()],
   css: {
     modules: {

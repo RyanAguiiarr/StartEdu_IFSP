@@ -156,7 +156,7 @@ export function CadastroImovel() {
 
       // Redirecionar após um breve delay
       setTimeout(() => {
-        navigate("/home");
+        navigate("/");
       }, 1500);
     } catch (error) {
       console.error("Erro ao cadastrar imóvel:", error);

@@ -22,23 +22,29 @@ public class AuthService {
         this.jwtService = jwtService;
     }
 
-    public AuthResponseDTO registerUser(RegisterRequestDTO registerRequestDTO) {
-        Cadastro cadastro = new Cadastro();
-        cadastro.setNome(registerRequestDTO.getNome());
-        cadastro.setEmail(registerRequestDTO.getEmail());
-        cadastro.setSenha(passwordEncoder.encode(registerRequestDTO.getSenha()));
+    public AuthResponseDTO registerUser(RegisterRequestDTO registerRequestDTO) throws Exception {
 
-        // Define um valor padrão se for nulo
-        if (registerRequestDTO.getTipoUsuario() == null) {
-            cadastro.setRole(Role.ALUNO);
-        } else {
-            cadastro.setRole(registerRequestDTO.getTipoUsuario());
-        }
+            Cadastro cadastro = new Cadastro();
+            cadastro.setNome(registerRequestDTO.getNome());
+            var email = cadastroRepository.findByEmail(registerRequestDTO.getEmail());
+            if(email.isPresent()){
+                throw new Exception("Email atual já cadastrado.");
+            }else{
+                cadastro.setEmail(registerRequestDTO.getEmail());
+            }
+            cadastro.setSenha(passwordEncoder.encode(registerRequestDTO.getSenha()));
 
-        Cadastro cadastroUser = cadastroRepository.save(cadastro);
+            // Define um valor padrão se for nulo
+            if (registerRequestDTO.getTipoUsuario() == null) {
+                cadastro.setRole(Role.ALUNO);
+            } else {
+                cadastro.setRole(registerRequestDTO.getTipoUsuario());
+            }
 
-        String token = jwtService.generateToken(cadastro);
-        return new AuthResponseDTO(cadastroUser.getId(), token);
+            Cadastro cadastroUser = cadastroRepository.save(cadastro);
+
+            String token = jwtService.generateToken(cadastro);
+            return new AuthResponseDTO(cadastroUser.getId(), token);
     }
 
     public AuthResponseDTO loginUser(AuthRequestDTO authRequestDTO) {

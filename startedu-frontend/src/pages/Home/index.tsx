@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
 import styles from "./Home_style.module.css";
-import axios from "axios";
-import {
-  tratandoImagensDeImovel,
-  tratandoImoveisFicticios,
-} from "./functions/functions";
-import { fazerLogout, obterUsuario } from "../../services/authService";
+import { buscarImoveisHome } from "./functions/functions";
+import { obterUsuario } from "../../services/authService";
 import imagempadrao from "../../images/imovel_teste.jpg";
 import AIAssistant from "../../components/AIAssistant/AIAssistant";
+import Navbar from "./components/Navbar";
+import ListingCard from "./components/listings_grid";
 
 // Defina uma interface para tipar os dados dos imóveis
 interface ImagemImovel {
@@ -103,10 +101,6 @@ const mockListings = [
   },
 ];
 
-const direcionarImovel = (id: number) => {
-  window.location.href = `/imovel/${id}`;
-};
-
 const Home = () => {
   const [guestCount, setGuestCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
@@ -119,113 +113,24 @@ const Home = () => {
 
   // Função de busca por nome do imóvel
   const buscarImoveis = async () => {
-    console.log("Iniciando busca de imóveis...");
-    console.log("Termo de busca:", searchQuery);
-
-    if (!searchQuery.trim()) {
-      console.log("Termo de busca vazio, buscando todos os imóveis");
-      // Se termo vazio então busque todos os imóveis
-      try {
-        setLoading(true);
-        // Substitua pela URL correta da sua API
-        const response = await axios.get<Imovel[]>(
-          "http://localhost:8080/imovel"
-        );
-
-        console.log("Resposta da API:", response.data);
-
-        if (
-          (Array.isArray(response.data) && response.data.length > 0) ||
-          (typeof response.data === "object" &&
-            response.data !== null &&
-            !Array.isArray(response.data))
-        ) {
-          setListings(await tratandoImagensDeImovel(response));
-        } else {
-          // Usa dados mockados se a API retornar vazio
-          setListings(await tratandoImoveisFicticios(mockListings));
-        }
-      } catch (error) {
-        console.error("Erro ao buscar imóveis:", error);
-        // Usa dados mockados em caso de erro
-        setListings(await tratandoImoveisFicticios(mockListings));
-      } finally {
-        setLoading(false);
-      }
-      return;
-    }
-
-    try {
-      setLoading(true);
-      console.log(
-        `Fazendo requisição para: http://localhost:8080/imovel/${searchQuery}`
-      );
-
-      // Chamada da API com parâmetro de busca
-      const response = await axios.get<Imovel[]>(
-        `http://localhost:8080/imovel/${searchQuery}`
-      );
-
-      const imoveisFormatados = await tratandoImagensDeImovel(response);
-      if (imoveisFormatados.length > 0) {
-        setListings(await tratandoImagensDeImovel(response));
-      } else {
-        // Se não encontrar resultados
-        console.log("Nenhum imóvel encontrado na resposta da API");
-        setListings([]);
-      }
-    } catch (error) {
-      console.error("Erro ao buscar imóveis:", error);
-
-      // Log detalhado do erro
-      if (error && typeof error === "object" && "isAxiosError" in error) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const axiosError = error as any;
-
-        console.error("Erro de requisição:");
-        console.error("Status:", axiosError.response?.status);
-        console.error("Dados:", axiosError.response?.data);
-        console.error("Headers:", axiosError.response?.headers);
-        console.error("Configuração:", axiosError.config);
-      }
-
-      setListings([]);
-    } finally {
-      console.log("Finalizando busca de imóveis");
-      setLoading(false);
-    }
+    await buscarImoveisHome(
+      searchQuery,
+      (listings) => setListings(listings as Imovel[]),
+      setLoading,
+      mockListings
+    );
   };
 
   // Função para buscar imóveis da API
   useEffect(() => {
     const fetchImoveis = async () => {
-      try {
-        setLoading(true);
-        // Substitua pela URL correta da sua API
-        const response = await axios.get<Imovel[]>(
-          "http://localhost:8080/imovel"
-        );
-
-        console.log("Resposta inicial da API:", response.data);
-
-        if (
-          (Array.isArray(response.data) && response.data.length > 0) ||
-          (typeof response.data === "object" &&
-            response.data !== null &&
-            !Array.isArray(response.data))
-        ) {
-          setListings(await tratandoImagensDeImovel(response));
-        } else {
-          // Usa dados mockados se a API retornar vazio
-          setListings(await tratandoImoveisFicticios(mockListings));
-        }
-      } catch (error) {
-        console.error("Erro ao buscar imóveis iniciais:", error);
-        // Usa dados mockados em caso de erro
-        setListings(await tratandoImoveisFicticios(mockListings));
-      } finally {
-        setLoading(false);
-      }
+      // Usa a função isolada para carregar todos os imóveis inicialmente
+      await buscarImoveisHome(
+        "",
+        (listings) => setListings(listings as Imovel[]),
+        setLoading,
+        mockListings
+      );
     };
 
     fetchImoveis();
@@ -234,91 +139,27 @@ const Home = () => {
   // Adicionar useEffect para obter dados do usuário
   useEffect(() => {
     const usuarioLogado = obterUsuario();
-    if (usuarioLogado && typeof usuarioLogado.nome === "string") {
+    console.log("Usuário logado obtido:", usuarioLogado);
+    console.log("LocalStorage usuario:", localStorage.getItem("usuario"));
+
+    if (usuarioLogado && usuarioLogado.nome) {
+      console.log("URL da foto do usuário:", usuarioLogado.foto);
       setUsuario({
-        nome: usuarioLogado.nome ?? "",
+        nome: usuarioLogado.nome,
         foto: usuarioLogado.foto,
       });
+    } else {
+      console.log("Usuário não encontrado ou sem nome");
     }
   }, []);
 
   return (
     <div className={styles.airbnbContainer}>
       {/* Navbar */}
-      <header className={styles.navbar}>
-        <div className={styles.logo}>
-          <a href="#">
-            {/* Remover a imagem e substituir pelo texto estilizado */}
-            <div className={styles.textLogo}>
-              <span className={styles.logoStart}>Start</span>
-              <span className={styles.logoEdu}>Edu</span>
-              <div className={styles.logoGlow}></div>
-            </div>
-          </a>
-        </div>
-        <nav className={styles.navTabs}>
-          <div className={`${styles.tab} ${styles.active}`}>Imóveis</div>
-          <div className={styles.tab}>Faculdades</div>
-          <div className={styles.tab}>Mais Procurados</div>
-        </nav>
-        <div className={styles.navActions}>
-          <button
-            className={styles.btnAnunciar}
-            onClick={() => (window.location.href = "/imovel")}
-            title="Anunciar um novo imóvel"
-          >
-            <span className={styles.btnIcon}>+</span>
-            <span className={styles.btnText}>Anunciar Imóvel</span>
-          </button>
-          <div className={styles.userProfile}>
-            {usuario ? (
-              <div className={styles.userMenu}>
-                <div
-                  className={styles.profilePic}
-                  style={{
-                    backgroundImage: `url(${
-                      usuario.foto ||
-                      "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTYgMjU2Ij48cmVjdCB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgZmlsbD0iIzRhMDJiNCIvPjxjaXJjbGUgY3g9IjEyOCIgY3k9Ijk2IiByPSI0MCIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik0yMTYsMTg0LjVjMC00OC42LTM5LjQtODgtODgtODhzLTg4LDM5LjQtODgsODhjMCw4LjMsMS4yLDE2LjMsMy4zLDI0YzQuOCwxNS43LDEzLjcsMjkuNSwyNS45LDQwLjJsNS40LDQuNUg5NmwxMTIsMC4ybDEwLjktMC43QzIzMS43LDI0MC40LDI0NCwyMTMuOSwyNDQsMTg0LjVDMjQ0LDE4NC41LDIxNiwxODQuNSwyMTYsMTg0LjV6IiBmaWxsPSIjZmZmIi8+PC9zdmc+"
-                    })`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }}
-                  title={usuario.nome}
-                />
-                <div className={styles.dropdownMenu}>
-                  <div className={styles.dropdownItem}>
-                    Olá, {usuario.nome.split(" ")[0]}
-                  </div>
-                  <div className={styles.dropdownDivider}></div>
-                  <div
-                    className={styles.dropdownItem}
-                    onClick={() => (window.location.href = "/aluno")}
-                  >
-                    Editar Perfil
-                  </div>
-                  <div
-                    className={styles.dropdownItem}
-                    onClick={() => {
-                      fazerLogout();
-                      window.location.reload();
-                    }}
-                  >
-                    Sair
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div
-                className={styles.profilePic}
-                onClick={() => (window.location.href = "/login")}
-                title="Fazer login ou cadastro"
-              />
-            )}
-          </div>
-        </div>
-      </header>
+      <Navbar usuario={usuario} />
 
       {/* View types and filters */}
+      {/* Sidebar navigation */}
       <div className={styles.viewControls}>
         <div className={styles.viewTypes}></div>
 
@@ -370,73 +211,11 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Sidebar navigation */}
-
       {/* Main content - listings grid */}
-      <div className={styles.listingsGrid}>
-        {loading ? (
-          <div className={styles.loadingMessage}>Carregando imóveis...</div>
-        ) : (
-          listings.map((item, index) => (
-            <div
-              className={styles.listingCard}
-              key={item.id || index}
-              onClick={() => direcionarImovel(item.id || index)}
-            >
-              <div
-                className={styles.cardImage}
-                style={{
-                  backgroundImage: `url(${
-                    typeof item.image === "string"
-                      ? item.image
-                      : "https://via.placeholder.com/300x200?text=Imóvel"
-                  })`,
-                }}
-              >
-                <button className={styles.favoriteBtn}>♡</button>
-              </div>
-              <div className={styles.cardContent}>
-                <div className={styles.cardHeader}>
-                  <h3>{item.title || item.nome}</h3>
-                  <div className={styles.rating}>
-                    <span className={styles.star}>★</span>
-                    <span>{item.rating || "4.5"}</span>
-                  </div>
-                </div>
-                <p className={styles.location}>
-                  {item.localizacao ||
-                    `${item.endereco || ""}, ${item.numero || ""}`}
-                </p>
-
-                {/* Exibir detalhes adicionais se disponíveis */}
-                <p className={styles.details}>
-                  {item.num_quartos !== undefined &&
-                    `${item.num_quartos} quarto(s)`}
-                  {item.num_quartos !== undefined &&
-                    item.num_banheiros !== undefined &&
-                    " • "}
-                  {item.num_banheiros !== undefined &&
-                    `${item.num_banheiros} banheiro(s)`}
-                  {(item.num_quartos !== undefined ||
-                    item.num_banheiros !== undefined) &&
-                    item.mobiliado !== undefined &&
-                    " • "}
-                  {item.mobiliado !== undefined &&
-                    (item.mobiliado ? "Mobiliado" : "Não mobiliado")}
-                </p>
-
-                <p className={styles.price}>
-                  <strong>{item.preco || "R$ --"}</strong> / diária
-                </p>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
-
+      <ListingCard listings={listings} loading={loading} />
       {/* Footer */}
       <div className={styles.madeIn}>
-        <span>Desenvolvido por StartEdu - Deploy Corrigido ✅</span>
+        <span>Desenvolvido por StartEdu</span>
       </div>
 
       {/* Assistente IA */}

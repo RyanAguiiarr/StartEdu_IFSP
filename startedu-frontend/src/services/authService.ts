@@ -73,7 +73,7 @@ export const buscarDadosUsuario = async (
         email: response.data.email,
         foto: response.data.image?.url
           ? `http://localhost:8080/aluno/images/${response.data.image.url
-              .split("/")
+              .split(/[/\\]/)
               .pop()}`
           : undefined,
       };

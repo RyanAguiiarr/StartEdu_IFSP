@@ -1,10 +1,14 @@
 package Ryan.StartEdu.dto;
 
 import Ryan.StartEdu.model.Role;
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.Email;
 
 public class RegisterRequestDTO {
 
     private String nome;
+    @Email
+    @Column(unique = true)
     private String email;
     private String senha;
     private Role tipoUsuario;

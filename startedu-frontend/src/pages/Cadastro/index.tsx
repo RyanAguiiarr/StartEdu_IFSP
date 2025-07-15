@@ -36,6 +36,7 @@ const Cadastro = () => {
     const userData = {
       nome: formData.get("nome") as string,
       email: formData.get("email") as string,
+      senha: formData.get("senha") as string,
       tipoUsuario: formData.get("tipoUsuario") as string,
       token: formData.get("token") as string | undefined, // Adiciona o token se existir
     };
@@ -57,9 +58,7 @@ const Cadastro = () => {
       if (err.response) {
         console.error("Resposta de erro:", err.response.data);
         console.error("Status:", err.response.status);
-        setError(
-          `Erro ${err.response.status}: ${JSON.stringify(err.response.data)}`
-        );
+        setError(`Erro ${err.response.status}: ${err.response.data}`);
       } else if (err.request) {
         console.error("Sem resposta:", err.request);
         setError("Erro de conexão: o servidor não respondeu.");

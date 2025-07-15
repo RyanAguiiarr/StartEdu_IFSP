@@ -4,6 +4,7 @@ import { salvarUsuario } from "./authService";
 interface UserData {
   nome: string;
   email: string;
+  senha: string;
   tipoUsuario: string;
   token?: string;
 }
