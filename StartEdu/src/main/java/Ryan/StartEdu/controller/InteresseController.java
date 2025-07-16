@@ -60,4 +60,22 @@ public class InteresseController {
         }
     }
 
+    @GetMapping("/{aluno_id}")
+    public ResponseEntity<?> listarInteressesPorAluno(@PathVariable long aluno_id){
+        try{
+            List<Interesse> interesses = interesseService.interessesPorAluno(aluno_id);
+
+            if (interesses != null) {
+                Map<String, Object> logData = new HashMap<>();
+                logData.put("event", "LISTAR_INTERESSES_POR_ALUNO");
+                logger.info("Interesses retornando com sucesso: {}", logData);
+                return ResponseEntity.ok(new ApiResponse<>(true, "Interesses listados com sucesso", interesses));
+            } else {
+                logger.error("Interesses nao encontrados: {}", interesses);
+                return ResponseEntity.notFound().build();
+            }
+        }catch (Exception ex){
+            throw new RuntimeException(ex);
+        }
+    }
 }

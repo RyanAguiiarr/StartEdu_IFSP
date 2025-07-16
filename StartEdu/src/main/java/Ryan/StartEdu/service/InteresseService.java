@@ -10,10 +10,7 @@ import Ryan.StartEdu.repository.InteresseRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class InteresseService {
@@ -64,4 +61,28 @@ public class InteresseService {
         }
 
     }
+
+    public List<Interesse> interessesPorAluno(Long alunoId) throws Exception{
+
+        try{
+            //recuperer aluno
+            Optional<Aluno> aluno = alunoRepository.findById(alunoId);
+            if(aluno.isEmpty()){
+                throw new Exception("aluno com id: " +alunoId + " não encontrado");
+            }
+
+            //recuperar interesses deste aluno
+            List<Interesse> interesses = interesseRepository.findByaluno_id(alunoId);
+
+            if(interesses.size() < 1 ){
+                throw new Exception("nenhum interesse encontrado.");
+            }
+
+            return interesses;
+
+        }catch (Exception ex){
+            throw new Exception("erro ao buscar interesses deste aluno.");
+        }
+    }
+
 }

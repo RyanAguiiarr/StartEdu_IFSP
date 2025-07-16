@@ -1,0 +1,681 @@
+/* Variáveis globais para cores e animações - Paleta premium tema escuro */
+:root {
+  --primary-color: #7a3eed;
+  --primary-dark: #6a2ed4;
+  --primary-darker: #5a1eb4;
+  --primary-light: #9966ff;
+  --primary-lighter: #b584ff;
+  --accent-color: #ff6a3d;
+  --accent-light: #ff8c6a;
+  --accent-dark: #e54b1c;
+  --success-color: #00b894;
+  --warning-color: #f9ca24;
+  --danger-color: #ee5253;
+  --text-light: #ffffff;
+  --text-dark: #ffffff;
+  --text-muted: #a0a0a0;
+  --background-light: #2a2a40;
+  --background-dark: #1a1a2e;
+  --background-darker: #16213e;
+  --card-background: #2a2a40;
+  --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  --hover-shadow: 0 15px 35px rgba(122, 62, 237, 0.3);
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  --border-radius-sm: 8px;
+  --border-radius-md: 12px;
+  --border-radius-lg: 20px;
+  --border-radius-xl: 30px;
+}
+
+/* Animações avançadas */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+/* Container principal */
+.container {
+  min-height: 100vh;
+  background: radial-gradient(ellipse at top, #1a1a2e 0%, #16213e 100%);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Loading container */
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  color: var(--text-muted);
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid var(--card-background);
+  border-top: 4px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+/* Conteúdo principal */
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 100px 20px 40px;
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 50px;
+  position: relative;
+}
+
+.title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--primary-light)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 15px;
+  text-shadow: 0 4px 8px rgba(122, 62, 237, 0.3);
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Filtros */
+.filtersContainer {
+  background: var(--card-background);
+  border-radius: var(--border-radius-lg);
+  padding: 30px;
+  margin-bottom: 40px;
+  box-shadow: var(--card-shadow);
+  border: 1px solid rgba(122, 62, 237, 0.2);
+}
+
+.filterButtons {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.filterButton {
+  padding: 12px 25px;
+  border: 2px solid var(--primary-color);
+  background: transparent;
+  color: var(--primary-color);
+  border-radius: var(--border-radius-lg);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.filterButton::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left var(--transition-normal);
+}
+
+.filterButton:hover::before {
+  left: 100%;
+}
+
+.filterButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(122, 62, 237, 0.4);
+}
+
+.filterButton.active {
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--primary-light)
+  );
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(122, 62, 237, 0.5);
+}
+
+/* Container de interesses */
+.interessesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* Card de interesse */
+.interesseCard {
+  background: var(--card-background);
+  border-radius: var(--border-radius-lg);
+  padding: 30px;
+  box-shadow: var(--card-shadow);
+  border: 1px solid rgba(122, 62, 237, 0.2);
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+  animation: slideIn 0.5s ease-out;
+}
+
+.interesseCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--primary-color),
+    var(--primary-light)
+  );
+}
+
+.interesseCard:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--hover-shadow);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 25px;
+  gap: 20px;
+}
+
+.imovelInfo {
+  display: flex;
+  gap: 20px;
+  flex: 1;
+}
+
+.imovelImage {
+  width: 120px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: var(--border-radius-md);
+  border: 2px solid rgba(122, 62, 237, 0.3);
+  transition: transform var(--transition-normal);
+}
+
+.imovelImage:hover {
+  transform: scale(1.05);
+}
+
+.imovelDetails {
+  flex: 1;
+}
+
+.imovelNome {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.imovelEndereco {
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.imovelEndereco::before {
+  content: "📍";
+  font-size: 0.9rem;
+}
+
+.imovelMeta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.preco {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--success-color);
+  background: rgba(0, 184, 148, 0.1);
+  padding: 5px 12px;
+  border-radius: var(--border-radius-sm);
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--warning-color);
+  font-weight: 600;
+}
+
+.quartos,
+.banheiros {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Status */
+.statusContainer {
+  display: flex;
+  align-items: flex-start;
+}
+
+.statusBadge {
+  padding: 8px 16px;
+  border-radius: var(--border-radius-lg);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  animation: pulse 2s infinite;
+}
+
+.statusPendente {
+  background: rgba(249, 202, 36, 0.2);
+  color: var(--warning-color);
+  border: 1px solid var(--warning-color);
+}
+
+.statusAceito {
+  background: rgba(0, 184, 148, 0.2);
+  color: var(--success-color);
+  border: 1px solid var(--success-color);
+}
+
+.statusRecusado {
+  background: rgba(238, 82, 83, 0.2);
+  color: var(--danger-color);
+  border: 1px solid var(--danger-color);
+}
+
+/* Corpo do card */
+.cardBody {
+  border-top: 1px solid rgba(122, 62, 237, 0.2);
+  padding-top: 20px;
+}
+
+.mensagemContainer h4 {
+  color: var(--text-dark);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mensagemContainer h4::before {
+  content: "💬";
+  font-size: 1rem;
+}
+
+.mensagem {
+  color: var(--text-muted);
+  line-height: 1.6;
+  background: var(--background-darker);
+  padding: 15px;
+  border-radius: var(--border-radius-md);
+  border-left: 4px solid var(--primary-color);
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+/* Footer do card */
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.dataInteresse {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dataInteresse::before {
+  content: "📅";
+  font-size: 0.8rem;
+}
+
+.acoes {
+  display: flex;
+  gap: 15px;
+}
+
+.botaoCancelar {
+  background: linear-gradient(135deg, var(--danger-color), #ff6b6b);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.botaoCancelar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left var(--transition-normal);
+}
+
+.botaoCancelar:hover::before {
+  left: 100%;
+}
+
+.botaoCancelar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(238, 82, 83, 0.5);
+}
+
+.botaoContato {
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--primary-light)
+  );
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.botaoContato::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left var(--transition-normal);
+}
+
+.botaoContato:hover::before {
+  left: 100%;
+}
+
+.botaoContato:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(122, 62, 237, 0.5);
+}
+
+/* Estado vazio */
+.emptyState {
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--text-muted);
+}
+
+.emptyIcon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  opacity: 0.7;
+}
+
+.emptyState h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--text-dark);
+}
+
+.emptyState p {
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .content {
+    padding: 80px 15px 30px;
+  }
+
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+  }
+
+  .filterButtons {
+    justify-content: center;
+  }
+
+  .filterButton {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+
+  .interesseCard {
+    padding: 20px;
+  }
+
+  .cardHeader {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .imovelInfo {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .imovelImage {
+    width: 100%;
+    height: 200px;
+    align-self: center;
+  }
+
+  .imovelMeta {
+    justify-content: center;
+  }
+
+  .statusContainer {
+    justify-content: center;
+    margin-top: 15px;
+  }
+
+  .cardFooter {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .acoes {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .filtersContainer {
+    padding: 20px;
+  }
+
+  .filterButtons {
+    flex-direction: column;
+  }
+
+  .filterButton {
+    width: 100%;
+    text-align: center;
+  }
+
+  .interesseCard {
+    padding: 15px;
+  }
+
+  .imovelMeta {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .acoes {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .botaoCancelar,
+  .botaoContato {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Animações de entrada */
+.interesseCard:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.interesseCard:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.interesseCard:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.interesseCard:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.interesseCard:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-darker);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--primary-color), var(--primary-light));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(var(--primary-dark), var(--primary-color));
+}

@@ -1,5 +1,5 @@
 import styles from "../Home_style.module.css";
-import { fazerLogout } from "../../../services/authService";
+import { fazerLogout, obterUsuario } from "../../../services/authService";
 
 interface Usuario {
   nome: string;
@@ -9,6 +9,8 @@ interface Usuario {
 interface NavbarProps {
   usuario: Usuario | null;
 }
+
+const id = obterUsuario()?.id; // Usar o ID do usuário ou 0 se não estiver logado
 
 const Navbar = ({ usuario }: NavbarProps) => {
   console.log("Renderizando Navbar com usuário:", usuario);
@@ -25,9 +27,19 @@ const Navbar = ({ usuario }: NavbarProps) => {
         </a>
       </div>
       <nav className={styles.navTabs}>
-        <div className={`${styles.tab} ${styles.active}`}>Imóveis</div>
+        <div
+          className={`${styles.tab} ${styles.active}`}
+          onClick={() => (window.location.href = "/")}
+        >
+          Imóveis
+        </div>
         <div className={styles.tab}>Faculdades</div>
-        <div className={styles.tab}>Mais Procurados</div>
+        <div
+          className={styles.tab}
+          onClick={() => (window.location.href = `/interesse/${id}`)}
+        >
+          Meus Interesses
+        </div>
       </nav>
       <div className={styles.navActions}>
         <button
