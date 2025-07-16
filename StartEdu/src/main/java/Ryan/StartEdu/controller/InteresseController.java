@@ -3,6 +3,7 @@ package Ryan.StartEdu.controller;
 import Ryan.StartEdu.model.ApiResponse;
 import Ryan.StartEdu.model.Interesse;
 import Ryan.StartEdu.service.InteresseService;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/interesse")
@@ -72,6 +74,25 @@ public class InteresseController {
                 return ResponseEntity.ok(new ApiResponse<>(true, "Interesses listados com sucesso", interesses));
             } else {
                 logger.error("Interesses nao encontrados: {}", interesses);
+                return ResponseEntity.notFound().build();
+            }
+        }catch (Exception ex){
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @DeleteMapping("/{interesse_id}")
+    public ResponseEntity<?> deletarInteressePorId(@PathVariable long interesse_id){
+        try{
+            Optional<Interesse> interesseDeletado = interesseService.deletarInteressePorId(interesse_id);
+
+            if (interesseDeletado != null) {
+                Map<String, Object> logData = new HashMap<>();
+                logData.put("event", "DELETAR_INTESSSE");
+                logger.info("Interesses deletado com sucesso: {}", logData);
+                return ResponseEntity.ok(new ApiResponse<>(true, "Interesse deletado com sucesso", interesseDeletado));
+            } else {
+                logger.error("Interesse nao deletado: {}", interesseDeletado);
                 return ResponseEntity.notFound().build();
             }
         }catch (Exception ex){

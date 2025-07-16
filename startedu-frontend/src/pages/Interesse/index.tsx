@@ -4,105 +4,18 @@ import { obterUsuario } from "../../services/authService";
 import imagempadrao from "../../images/imovel_teste.jpg";
 import AIAssistant from "../../components/AIAssistant/AIAssistant";
 import Navbar from "../Home/components/Navbar";
-import { api } from "../../services/api";
-
-// Função para processar imagens dos interesses
-const processarImagensInteresse = (interesse: Interesse): Interesse => {
-  let imageUrl = imagempadrao; // Imagem padrão
-
-  // Verificamos o formato da propriedade imagens
-  console.log("Formato das imagens do interesse:", interesse.imovel_id.imagens);
-
-  if (interesse.imovel_id.imagens && interesse.imovel_id.imagens.length > 0) {
-    // Se imagens for um array de objetos ImagemImovel
-    const primeiraImagem = interesse.imovel_id.imagens[0];
-
-    if (
-      primeiraImagem &&
-      typeof primeiraImagem === "object" &&
-      primeiraImagem.url
-    ) {
-      // Se for objeto com URL, processar como caminho
-      const caminhoCompleto = primeiraImagem.url;
-      const filename = caminhoCompleto.split(/[/\\]/).pop();
-      if (filename) {
-        imageUrl = `http://localhost:8080/imovel/images/${filename}`;
-        console.log(`URL da imagem formatada: ${imageUrl}`);
-      }
-    }
-  }
-
-  return {
-    ...interesse,
-    imovel_id: {
-      ...interesse.imovel_id,
-      imagens: [{ id: 1, url: imageUrl }], // Substitui por array com URL processada
-    },
-  };
-};
-
-// Função para processar array de interesses
-const processarImagensInteresses = (interesses: Interesse[]): Interesse[] => {
-  return interesses.map((interesse) => processarImagensInteresse(interesse));
-};
+import {
+  buscarInteressesAluno,
+  cancelarInteresse as cancelarInteresseFunction,
+  formatarData,
+  getStatusText,
+  type Interesse,
+} from "./functions/functions";
 
 // Interfaces para tipagem
-interface ImagemImovel {
-  id: number;
-  url: string;
-}
-
-interface Aluno {
-  id: number;
-  nome: string;
-  cpf: string;
-  email: string;
-  telefone: string;
-  dataNascimento: string;
-  sexo: string;
-  image?: {
-    id: number;
-    url: string;
-  };
-  cadastro_id?: number;
-}
-
-interface Imovel {
-  id: number;
-  nome: string;
-  endereco: string;
-  numero: string;
-  descricao: string;
-  imagens?: ImagemImovel[];
-  localizacao?: string;
-  preco?: string;
-  num_quartos?: number;
-  num_banheiros?: number;
-  mobiliado?: boolean;
-  status?: boolean;
-  imobiliaria_id?: number;
-  image?: string;
-}
-
-interface Interesse {
-  id: number;
-  aluno: Aluno;
-  imovel_id: Imovel;
-  mensagem: string;
-  data_interesse: string;
-  status: "PENDENTE" | "ACEITO" | "RECUSADO";
-}
-
 interface UsuarioNavbar {
   nome: string;
   foto?: string;
-}
-
-// Interface para a resposta da API
-interface ApiResponse {
-  dados?: Interesse[];
-  sucesso?: boolean;
-  mensagem?: string;
 }
 
 // Mock data para desenvolvimento
@@ -118,7 +31,7 @@ const mockInteresses: Interesse[] = [
       dataNascimento: "2006-03-02",
       sexo: "M",
     },
-    imovel_id: {
+    imovel: {
       id: 1,
       nome: "Apartamento Moderno no Centro",
       endereco: "Rua das Flores, 123",
@@ -147,7 +60,7 @@ const mockInteresses: Interesse[] = [
       dataNascimento: "2006-03-02",
       sexo: "M",
     },
-    imovel_id: {
+    imovel: {
       id: 2,
       nome: "Casa Compartilhada próxima ao Campus",
       endereco: "Av. Universitária, 456",
@@ -176,7 +89,7 @@ const mockInteresses: Interesse[] = [
       dataNascimento: "2006-03-02",
       sexo: "M",
     },
-    imovel_id: {
+    imovel: {
       id: 3,
       nome: "Quarto Individual com Banheiro",
       endereco: "Rua dos Estudantes, 789",
@@ -195,7 +108,7 @@ const mockInteresses: Interesse[] = [
   },
 ];
 
-const Interesse = () => {
+const InteressePage = () => {
   const [interesses, setInteresses] = useState<Interesse[]>([]);
   const [loading, setLoading] = useState(true);
   const [usuario, setUsuario] = useState<UsuarioNavbar | null>(null);
@@ -211,81 +124,10 @@ const Interesse = () => {
     isInteressesArray: Array.isArray(interesses),
   });
 
-  // Função para buscar interesses do aluno logado
-  const buscarInteresses = async (alunoId: number) => {
-    console.log("Iniciando buscarInteresses com ID:", alunoId);
-
-    try {
-      setLoading(true);
-      setInteresses([]); // Limpar estado anterior
-
-      // Tentativa de buscar da API
-      try {
-        console.log("Tentando buscar da API...");
-        const response = await api.get<ApiResponse>(`/interesse/${alunoId}`);
-        console.log("Resposta da API completa:", response.data);
-        console.log("Tipo da resposta:", typeof response.data);
-        console.log(
-          "Tem propriedade 'dados'?",
-          response.data && "dados" in response.data
-        );
-        console.log("Valor de 'dados':", response.data?.dados);
-        console.log("'dados' é array?", Array.isArray(response.data?.dados));
-
-        // Verifica se a resposta tem a propriedade 'dados' que é um array
-        if (response.data && Array.isArray(response.data.dados)) {
-          console.log(
-            "✅ Dados da API são um array válido:",
-            response.data.dados
-          );
-          const interessesComImagens = processarImagensInteresses(
-            response.data.dados as Interesse[]
-          );
-          setInteresses(interessesComImagens);
-          return;
-        } else if (Array.isArray(response.data)) {
-          // Fallback se a resposta for diretamente um array
-          console.log(
-            "✅ Resposta da API é diretamente um array:",
-            response.data
-          );
-          const interessesComImagens = processarImagensInteresses(
-            response.data as Interesse[]
-          );
-          setInteresses(interessesComImagens);
-          return;
-        } else {
-          console.log(
-            "❌ Dados da API não são um array válido, usando mock. Estrutura:",
-            response.data
-          );
-        }
-      } catch (apiError) {
-        console.log("❌ API não disponível, usando dados mock:", apiError);
-      }
-
-      // Fallback para dados mock
-      console.log("Usando dados mock...");
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const interessesMock = mockInteresses.filter(
-        (interesse) => interesse.aluno.id === alunoId
-      );
-      console.log("Interesses mock filtrados:", interessesMock);
-      setInteresses(interessesMock);
-    } catch (error) {
-      console.error("Erro ao buscar interesses:", error);
-      setInteresses([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   // Função para cancelar interesse
   const cancelarInteresse = async (interesseId: number) => {
     try {
-      // TODO: Implementar chamada real para API
-      // await axios.delete(`/api/interesses/${interesseId}`);
-
+      await cancelarInteresseFunction(interesseId);
       setInteresses((prev) =>
         prev.filter((interesse) => interesse.id !== interesseId)
       );
@@ -294,39 +136,15 @@ const Interesse = () => {
     }
   };
 
-  // Função para formatar data
-  const formatarData = (dataString: string) => {
-    const data = new Date(dataString);
-    return data.toLocaleDateString("pt-BR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
   // Função para obter cor do status
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "aceito":
+      case "ACEITO":
         return styles.statusAceito;
-      case "recusado":
+      case "RECUSADO":
         return styles.statusRecusado;
       default:
         return styles.statusPendente;
-    }
-  };
-
-  // Função para obter texto do status
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case "aceito":
-        return "Aceito";
-      case "recusado":
-        return "Recusado";
-      default:
-        return "Pendente";
     }
   };
 
@@ -339,20 +157,33 @@ const Interesse = () => {
 
   // Carregar dados do usuário e interesses
   useEffect(() => {
-    const usuarioLogado = obterUsuario();
-    console.log("Usuario logado:", usuarioLogado);
+    const carregarDados = async () => {
+      const usuarioLogado = obterUsuario();
+      console.log("Usuario logado:", usuarioLogado);
 
-    if (usuarioLogado && usuarioLogado.id) {
-      setUsuario({
-        nome: usuarioLogado.nome || "Usuário",
-        foto: usuarioLogado.foto,
-      });
-      console.log("Chamando buscarInteresses com ID:", usuarioLogado.id);
-      buscarInteresses(usuarioLogado.id);
-    } else {
-      console.log("Usuário não encontrado ou sem ID");
-      setLoading(false);
-    }
+      if (usuarioLogado && usuarioLogado.id) {
+        setUsuario({
+          nome: usuarioLogado.nome || "Usuário",
+          foto: usuarioLogado.foto,
+        });
+        console.log("Chamando buscarInteressesAluno com ID:", usuarioLogado.id);
+        try {
+          setLoading(true);
+          const interesses = await buscarInteressesAluno(usuarioLogado.id);
+          setInteresses(interesses);
+        } catch (error) {
+          console.error("Erro ao buscar interesses:", error);
+          setInteresses(mockInteresses);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        console.log("Usuário não encontrado ou sem ID");
+        setLoading(false);
+      }
+    };
+
+    carregarDados();
   }, []);
 
   if (loading) {
@@ -450,28 +281,45 @@ const Interesse = () => {
                   <div className={styles.imovelInfo}>
                     <img
                       src={
-                        interesse.imovel_id.imagens?.[0]?.url || imagempadrao
+                        Array.isArray(interesse.imovel.imagens) &&
+                        interesse.imovel.imagens.length > 0
+                          ? typeof interesse.imovel.imagens[0] === "string"
+                            ? interesse.imovel.imagens[0]
+                            : (
+                                interesse.imovel.imagens[0] as {
+                                  id: number;
+                                  url: string;
+                                }
+                              ).url
+                          : imagempadrao
                       }
-                      alt={interesse.imovel_id.nome}
+                      alt={interesse.imovel.nome || interesse.imovel.titulo}
                       className={styles.imovelImage}
                     />
                     <div className={styles.imovelDetails}>
                       <h3 className={styles.imovelNome}>
-                        {interesse.imovel_id.nome}
+                        {interesse.imovel.nome || interesse.imovel.titulo}
                       </h3>
                       <p className={styles.imovelEndereco}>
-                        {interesse.imovel_id.endereco},{" "}
-                        {interesse.imovel_id.numero}
+                        {interesse.imovel.endereco ||
+                          interesse.imovel.enderecoCompleto}
+                        , {interesse.imovel.numero || ""}
                       </p>
                       <div className={styles.imovelMeta}>
                         <span className={styles.preco}>
-                          {interesse.imovel_id.preco}
+                          {interesse.imovel.preco}
                         </span>
                         <span className={styles.quartos}>
-                          🛏️ {interesse.imovel_id.num_quartos} quartos
+                          🛏️{" "}
+                          {interesse.imovel.num_quartos ||
+                            interesse.imovel.quartos}{" "}
+                          quartos
                         </span>
                         <span className={styles.banheiros}>
-                          🚿 {interesse.imovel_id.num_banheiros} banheiros
+                          🚿{" "}
+                          {interesse.imovel.num_banheiros ||
+                            interesse.imovel.banheiros}{" "}
+                          banheiros
                         </span>
                       </div>
                     </div>
@@ -491,12 +339,21 @@ const Interesse = () => {
                 <div className={styles.cardBody}>
                   <div className={styles.mensagemContainer}>
                     <h4>Sua mensagem:</h4>
-                    <p className={styles.mensagem}>{interesse.mensagem}</p>
+                    <p className={styles.mensagem}>
+                      {interesse.mensagem ||
+                        interesse.descricao ||
+                        "Sem mensagem"}
+                    </p>
                   </div>
 
                   <div className={styles.cardFooter}>
                     <span className={styles.dataInteresse}>
-                      Enviado em: {formatarData(interesse.data_interesse)}
+                      Enviado em:{" "}
+                      {formatarData(
+                        interesse.data_interesse ||
+                          interesse.dataCriacao ||
+                          new Date().toISOString()
+                      )}
                     </span>
 
                     <div className={styles.acoes}>
@@ -528,4 +385,4 @@ const Interesse = () => {
   );
 };
 
-export default Interesse;
+export default InteressePage;

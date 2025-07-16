@@ -85,4 +85,20 @@ public class InteresseService {
         }
     }
 
+    public Optional<Interesse> deletarInteressePorId(Long id) throws Exception{
+
+        try{
+            Optional<Interesse> interesseDeletado = interesseRepository.findById(id);
+            if(interesseDeletado.isEmpty()){
+                throw new Exception("Nenhum interesse a ser deletado");
+            }
+
+            interesseRepository.deleteById(id);
+
+            return interesseDeletado;
+        }catch (Exception ex){
+            throw new Exception("Erro ao deletar interesse");
+        }
+    }
+
 }
