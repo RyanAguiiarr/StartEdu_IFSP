@@ -19,7 +19,7 @@ interface ApiInteresse {
     dataNascimento?: string;
     sexo?: string;
   };
-  imovel_id: {
+  imovel: {
     id: number;
     nome: string;
     endereco: string;
@@ -36,42 +36,27 @@ interface ApiInteresse {
   status: "ACEITO" | "RECUSADO" | "PENDENTE";
 }
 
-// Tipo para representar um interesse
+// Tipo para representar um interesse (simplificado - apenas campos usados)
 export interface Interesse {
   id: number;
-  descricao?: string;
-  dataCriacao?: string;
   status: "ACEITO" | "RECUSADO" | "PENDENTE";
-  valorSugerido?: number;
   mensagem?: string;
+  descricao?: string;
   data_interesse?: string;
+  dataCriacao?: string;
   imovel: {
     id: number;
-    titulo?: string;
     nome?: string;
-    descricao: string;
+    titulo?: string;
     preco: number | string;
-    imagens: string[] | { id: number; url: string }[];
-    enderecoCompleto?: string;
+    imagens: string[];
     endereco?: string;
+    enderecoCompleto?: string;
     numero?: string;
-    categoria?: string;
-    tipo?: string;
-    area?: number;
-    quartos?: number;
     num_quartos?: number;
-    banheiros?: number;
+    quartos?: number;
     num_banheiros?: number;
-    vagas?: number;
-    mobiliado?: boolean;
-    status?: boolean;
-    dataCriacao?: string;
-    usuario?: {
-      id: number;
-      nome: string;
-      email: string;
-      telefone: string;
-    };
+    banheiros?: number;
   };
   aluno: {
     id: number;
@@ -174,6 +159,7 @@ export const processarImagensInteresse = (imagens: unknown[]): string[] => {
 export const buscarInteressesAluno = async (
   alunoId: number
 ): Promise<Interesse[]> => {
+  console.log("Buscando interesses para o aluno ID:", alunoId);
   try {
     const response = await api.get(`/interesse/${alunoId}`);
 
@@ -193,34 +179,25 @@ export const buscarInteressesAluno = async (
         descricao: apiInteresse.mensagem,
         dataCriacao: apiInteresse.data_interesse,
         status: apiInteresse.status,
-        valorSugerido: 0,
         mensagem: apiInteresse.mensagem,
         data_interesse: apiInteresse.data_interesse,
         imovel: {
-          id: apiInteresse.imovel_id.id,
-          titulo: apiInteresse.imovel_id.nome,
-          nome: apiInteresse.imovel_id.nome,
-          descricao: apiInteresse.imovel_id.descricao,
-          preco: apiInteresse.imovel_id.preco,
+          id: apiInteresse.imovel.id,
+          titulo: apiInteresse.imovel.nome,
+          nome: apiInteresse.imovel.nome,
+          preco: apiInteresse.imovel.preco,
           imagens: processarImagensInteresse(
-            Array.isArray(apiInteresse.imovel_id.imagens)
-              ? apiInteresse.imovel_id.imagens
+            Array.isArray(apiInteresse.imovel.imagens)
+              ? apiInteresse.imovel.imagens
               : []
           ),
-          enderecoCompleto: `${apiInteresse.imovel_id.endereco}, ${apiInteresse.imovel_id.numero}`,
-          endereco: apiInteresse.imovel_id.endereco,
-          numero: apiInteresse.imovel_id.numero,
-          categoria: "Residencial",
-          tipo: "Apartamento",
-          area: 0,
-          quartos: apiInteresse.imovel_id.num_quartos || 0,
-          num_quartos: apiInteresse.imovel_id.num_quartos,
-          banheiros: apiInteresse.imovel_id.num_banheiros || 0,
-          num_banheiros: apiInteresse.imovel_id.num_banheiros,
-          vagas: 0,
-          mobiliado: apiInteresse.imovel_id.mobiliado || false,
-          status: true,
-          dataCriacao: apiInteresse.data_interesse,
+          enderecoCompleto: `${apiInteresse.imovel.endereco}, ${apiInteresse.imovel.numero}`,
+          endereco: apiInteresse.imovel.endereco,
+          numero: apiInteresse.imovel.numero,
+          quartos: apiInteresse.imovel.num_quartos || 0,
+          num_quartos: apiInteresse.imovel.num_quartos,
+          banheiros: apiInteresse.imovel.num_banheiros || 0,
+          num_banheiros: apiInteresse.imovel.num_banheiros,
         },
         aluno: apiInteresse.aluno,
       })

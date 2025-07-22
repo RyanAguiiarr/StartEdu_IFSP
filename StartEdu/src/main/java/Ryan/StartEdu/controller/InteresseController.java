@@ -3,7 +3,6 @@ package Ryan.StartEdu.controller;
 import Ryan.StartEdu.model.ApiResponse;
 import Ryan.StartEdu.model.Interesse;
 import Ryan.StartEdu.service.InteresseService;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,7 @@ import java.util.Optional;
 public class InteresseController {
 
     private InteresseService interesseService;
-    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(ImovelController.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(InteresseController.class);
 
     public InteresseController(InteresseService interesseService) {
         this.interesseService = interesseService;
@@ -65,19 +64,30 @@ public class InteresseController {
     @GetMapping("/{aluno_id}")
     public ResponseEntity<?> listarInteressesPorAluno(@PathVariable long aluno_id){
         try{
+            System.out.println("=== CONTROLLER: Buscando interesses para aluno ID: " + aluno_id + " ===");
+            
             List<Interesse> interesses = interesseService.interessesPorAluno(aluno_id);
 
-            if (interesses != null) {
+            if (interesses != null && !interesses.isEmpty()) {
                 Map<String, Object> logData = new HashMap<>();
                 logData.put("event", "LISTAR_INTERESSES_POR_ALUNO");
-                logger.info("Interesses retornando com sucesso: {}", logData);
+                logData.put("alunoId", aluno_id);
+                logData.put("quantidadeInteresses", interesses.size());
+                
+                System.out.println("=== CONTROLLER: Encontrados " + interesses.size() + " interesses ===");
+                
+                logger.info("Interesses retornados com sucesso: {}", logData);
                 return ResponseEntity.ok(new ApiResponse<>(true, "Interesses listados com sucesso", interesses));
             } else {
-                logger.error("Interesses nao encontrados: {}", interesses);
-                return ResponseEntity.notFound().build();
+                System.out.println("=== CONTROLLER: Nenhum interesse encontrado para aluno ID: " + aluno_id + " ===");
+                logger.warn("Nenhum interesse encontrado para aluno ID: {}", aluno_id);
+                return ResponseEntity.ok(new ApiResponse<>(true, "Nenhum interesse encontrado", java.util.Collections.emptyList()));
             }
         }catch (Exception ex){
-            throw new RuntimeException(ex);
+            System.out.println("=== CONTROLLER ERROR: " + ex.getMessage() + " ===");
+            ex.printStackTrace();
+            logger.error("Erro ao buscar interesses para aluno {}: {}", aluno_id, ex.getMessage());
+            return ResponseEntity.status(500).body(new ApiResponse<>(false, "Erro interno: " + ex.getMessage(), null));
         }
     }
 

@@ -6,6 +6,7 @@ import Aluno from "./pages/Aluno";
 import CadastroImovel from "./pages/CadastroImovel";
 import Imovel from "./pages/Imovel";
 import Interesse from "./pages/Interesse";
+import MatchPage from "./pages/Match";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/imovel" element={<CadastroImovel />} />
         <Route path="/imovel/:id" element={<Imovel />} />
         <Route path="/interesse/:id" element={<Interesse />} />
+        <Route path="/match/:id" element={<MatchPage />} />
       </Routes>
     </BrowserRouter>
   );

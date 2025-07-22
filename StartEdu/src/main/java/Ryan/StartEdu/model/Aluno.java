@@ -1,5 +1,6 @@
 package Ryan.StartEdu.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 
@@ -76,6 +77,15 @@ public class Aluno {
 
     public void setImage(ImagemAluno image) {
         this.image = image;
+    }
+
+    // Método para serialização JSON da foto
+    @JsonProperty("foto")
+    public String getFoto() {
+        if (this.image != null && this.image.getUrl() != null) {
+            return this.image.getUrl();
+        }
+        return null;
     }
 
     public void setEmail(String email) {

@@ -36,14 +36,10 @@ const mockInteresses: Interesse[] = [
       nome: "Apartamento Moderno no Centro",
       endereco: "Rua das Flores, 123",
       numero: "123",
-      descricao:
-        "Apartamento moderno com 2 quartos e 1 banheiro, localizado no centro da cidade.",
       num_quartos: 2,
       num_banheiros: 1,
-      mobiliado: true,
-      status: true,
       preco: "R$ 1.200",
-      imagens: [{ id: 1, url: imagempadrao }],
+      imagens: [imagempadrao],
     },
     mensagem: "Tenho interesse neste imóvel para o próximo semestre letivo.",
     data_interesse: "2024-01-15T10:30:00",
@@ -65,14 +61,10 @@ const mockInteresses: Interesse[] = [
       nome: "Casa Compartilhada próxima ao Campus",
       endereco: "Av. Universitária, 456",
       numero: "456",
-      descricao:
-        "Casa para compartilhar com outros estudantes, ambiente acolhedor.",
       num_quartos: 3,
       num_banheiros: 2,
-      mobiliado: false,
-      status: true,
       preco: "R$ 800",
-      imagens: [{ id: 1, url: imagempadrao }],
+      imagens: [imagempadrao],
     },
     mensagem: "Gostaria de saber mais detalhes sobre a disponibilidade.",
     data_interesse: "2024-01-10T14:20:00",
@@ -94,13 +86,10 @@ const mockInteresses: Interesse[] = [
       nome: "Quarto Individual com Banheiro",
       endereco: "Rua dos Estudantes, 789",
       numero: "789",
-      descricao: "Quarto individual mobiliado com banheiro privativo.",
       num_quartos: 1,
       num_banheiros: 1,
-      mobiliado: true,
-      status: true,
       preco: "R$ 600",
-      imagens: [{ id: 1, url: imagempadrao }],
+      imagens: [imagempadrao],
     },
     mensagem: "Preciso de um lugar para morar durante o período de estágio.",
     data_interesse: "2024-01-05T16:45:00",
@@ -283,14 +272,7 @@ const InteressePage = () => {
                       src={
                         Array.isArray(interesse.imovel.imagens) &&
                         interesse.imovel.imagens.length > 0
-                          ? typeof interesse.imovel.imagens[0] === "string"
-                            ? interesse.imovel.imagens[0]
-                            : (
-                                interesse.imovel.imagens[0] as {
-                                  id: number;
-                                  url: string;
-                                }
-                              ).url
+                          ? interesse.imovel.imagens[0]
                           : imagempadrao
                       }
                       alt={interesse.imovel.nome || interesse.imovel.titulo}

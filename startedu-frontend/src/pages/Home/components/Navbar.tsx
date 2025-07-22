@@ -33,12 +33,17 @@ const Navbar = ({ usuario }: NavbarProps) => {
         >
           Imóveis
         </div>
-        <div className={styles.tab}>Faculdades</div>
         <div
           className={styles.tab}
           onClick={() => (window.location.href = `/interesse/${id}`)}
         >
           Meus Interesses
+        </div>
+        <div
+          className={styles.tab}
+          onClick={() => (window.location.href = `/match/${id}`)}
+        >
+          Meus Matchs
         </div>
       </nav>
       <div className={styles.navActions}>

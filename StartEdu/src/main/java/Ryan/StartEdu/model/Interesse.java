@@ -2,27 +2,39 @@ package Ryan.StartEdu.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Date;
 
 @Entity
+@Table(name = "interesse")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Interesse {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "aluno_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "aluno_id", referencedColumnName = "id")
     @NotNull(message = "o campo aluno é obrigatório")
-    private Aluno aluno; // Em vez de aluno_id
-    @ManyToOne
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Aluno aluno;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "imovel_id", referencedColumnName = "id")
     @NotNull(message = "o campo Imovel é obrigatório")
-    private Imovel imovel_id;
-    @Column(nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Imovel imovel;
+    
+    @Column(name = "mensagem", nullable = false)
     private String mensagem;
-    @Column(nullable = false)
+    
+    @Column(name = "data_interesse", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date data_interesse;
+    
+    @Column(name = "status", nullable = false)
     private String status;
 
     public Long getId() {
@@ -41,12 +53,12 @@ public class Interesse {
         this.aluno = aluno_id;
     }
 
-    public Imovel getImovel_id() {
-        return imovel_id;
+    public Imovel getImovel() {
+        return imovel;
     }
 
-    public void setImovel_id(Imovel imovel_id) {
-        this.imovel_id = imovel_id;
+    public void setImovel(Imovel imovel) {
+        this.imovel = imovel;
     }
 
     public String getMensagem() {

@@ -1,5 +1,8 @@
 import axios from "axios";
-import { obterUsuario } from "../../../services/authService";
+import {
+  obterUsuario,
+  buscarDadosUsuario,
+} from "../../../services/authService";
 import imagemTeste from "../../../images/imovel_teste.jpg";
 
 // Tipos
@@ -33,7 +36,7 @@ export interface ApiResponse<T> {
 export interface InteresseResponse {
   id: number;
   aluno: { id: number };
-  imovel_id: { id: number };
+  imovel: { id: number };
   mensagem: string;
   data_interesse: string;
   status: string;
@@ -99,30 +102,105 @@ export const carregarDadosImovel = async (id: string): Promise<Imovel> => {
   }
 };
 
+// Função para garantir que temos dados completos do usuário
+export const garantirDadosCompletos = async () => {
+  const usuario = obterUsuario();
+
+  if (!usuario) {
+    throw new Error("Usuário não logado");
+  }
+
+  // Se o usuário existe mas não tem ID, tentar buscar dados completos
+  if (!usuario.id && usuario.email) {
+    console.log("ID do usuário não encontrado, buscando dados completos...");
+    try {
+      const usuarioCompleto = await buscarDadosUsuario(usuario.email);
+      if (usuarioCompleto && usuarioCompleto.id) {
+        console.log("Dados completos recuperados:", usuarioCompleto);
+        return usuarioCompleto;
+      }
+    } catch (error) {
+      console.error("Erro ao buscar dados completos:", error);
+    }
+  }
+
+  if (!usuario.id) {
+    throw new Error("ID do usuário não encontrado. Faça login novamente.");
+  }
+
+  return usuario;
+};
+
 // Função para manifestar interesse no imóvel
 export const manifestarInteresse = async (
   imovelId: string,
   imovelNome: string
 ): Promise<boolean> => {
-  const usuario = obterUsuario();
+  console.log("=== MANIFESTAR INTERESSE - INÍCIO ===");
+
+  let usuario = obterUsuario();
+  console.log("Usuário obtido do localStorage:", usuario);
+
   if (!usuario) {
+    console.error("Usuário não logado");
     throw new Error("Usuário não logado");
+  }
+
+  // Se o usuário existe mas não tem ID, tentar buscar dados completos
+  if (!usuario.id && usuario.email) {
+    console.log(
+      "ID do usuário não encontrado, tentando buscar dados completos..."
+    );
+    try {
+      const usuarioCompleto = await buscarDadosUsuario(usuario.email);
+      if (usuarioCompleto && usuarioCompleto.id) {
+        usuario = usuarioCompleto;
+        console.log("Dados completos do usuário recuperados:", usuario);
+      }
+    } catch (error) {
+      console.error("Erro ao buscar dados completos do usuário:", error);
+    }
+  }
+
+  // Validações adicionais
+  if (!usuario.id) {
+    console.error("ID do usuário não encontrado:", usuario);
+    console.error(
+      "Estrutura completa do usuário:",
+      JSON.stringify(usuario, null, 2)
+    );
+    throw new Error("ID do usuário não encontrado. Faça login novamente.");
+  }
+
+  if (!imovelId || isNaN(Number(imovelId))) {
+    console.error("ID do imóvel inválido:", imovelId);
+    throw new Error("ID do imóvel inválido");
   }
 
   try {
     const interesseData = {
-      aluno: { id: usuario.id },
-      imovel_id: { id: Number(imovelId) },
+      aluno: {
+        id: Number(usuario.id), // Garantir que é um número
+      },
+      imovel: {
+        id: Number(imovelId),
+      },
       mensagem: `Interesse manifestado pelo usuário ${usuario.nome} no imóvel ${imovelNome}`,
       data_interesse: new Date(),
       status: "PENDENTE",
     };
+
+    console.log(
+      "Dados sendo enviados para API:",
+      JSON.stringify(interesseData, null, 2)
+    );
 
     const response = await axios.post<ApiResponse<InteresseResponse>>(
       "http://localhost:8080/interesse",
       interesseData
     );
 
+    console.log("Resposta da API:", response.data);
     return response.data?.sucesso || false;
   } catch (error) {
     console.error("Erro ao manifestar interesse:", error);

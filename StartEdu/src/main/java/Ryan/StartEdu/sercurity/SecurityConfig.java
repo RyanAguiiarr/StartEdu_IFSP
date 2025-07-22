@@ -36,6 +36,7 @@ public class SecurityConfig {
                         .requestMatchers("/aluno/**").permitAll()
                         .requestMatchers("/interesse/**").permitAll()
                         .requestMatchers("/interesse").permitAll()
+                        .requestMatchers("/match/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->
