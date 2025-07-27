@@ -8,6 +8,7 @@ import Ryan.StartEdu.repository.MatchRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MatchService {
@@ -35,4 +36,28 @@ public class MatchService {
 
 
     }
+
+    public Match alterarMatch(Long match_id, String statusNovo) throws Exception{
+
+
+        try{
+            Optional<Match> matchAlter = matchRepository.findById(match_id);
+
+            if(matchAlter.isEmpty()){
+                throw new Exception("imovel com id " + match_id + "nao encontrado");
+            }
+
+            matchAlter.get().setStatus(statusNovo);
+
+            matchRepository.save(matchAlter.get());
+
+            return matchAlter.get();
+
+
+
+        }catch (Exception ex){
+            throw new Exception("erro ao alterar match");
+        }
+    }
+
 }

@@ -4,7 +4,7 @@ import imagempadrao from "../../images/imovel_teste.jpg";
 import AIAssistant from "../../components/AIAssistant/AIAssistant";
 import Navbar from "../Home/components/Navbar";
 import { obterUsuario } from "../../services/authService";
-import { buscarMatches } from "./functions/functions";
+import { alterarStatusMatch, buscarMatches } from "./functions/functions";
 import { useEffect } from "react"; // Importando a instância do Axios configurada
 
 interface UsuarioNavbar {
@@ -289,7 +289,10 @@ const MatchPage = () => {
                 className={`${styles.matchCard} ${
                   match.status === "NOVO" ? styles.novoMatch : ""
                 }`}
-                onClick={() => setMatchSelecionado(match)}
+                onClick={() => {
+                  setMatchSelecionado(match);
+                  alterarStatusMatch(match.id, "VISUALIZADO");
+                }}
               >
                 <div className={styles.matchHeader}>
                   <div className={styles.statusBadges}>

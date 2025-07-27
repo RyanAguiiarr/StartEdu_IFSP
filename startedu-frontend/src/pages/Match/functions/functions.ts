@@ -354,3 +354,17 @@ export const getStatusColor = (status: string): string => {
   };
   return colorMap[status as keyof typeof colorMap] || "#757575";
 };
+
+export const alterarStatusMatch = async (
+  matchId: number,
+  newStatus: "VISUALIZADO"
+): Promise<void> => {
+  try {
+    console.log("🔄 Alterando status do match:", matchId, "para:", newStatus);
+    await api.put(`/match/${matchId}`, { status: newStatus });
+    console.log("✅ Status alterado com sucesso");
+  } catch (error) {
+    console.error("❌ Erro ao alterar status do match:", error);
+    throw error;
+  }
+};

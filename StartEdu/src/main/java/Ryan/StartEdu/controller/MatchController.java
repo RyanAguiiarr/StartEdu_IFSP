@@ -6,10 +6,7 @@ import Ryan.StartEdu.model.Match;
 import Ryan.StartEdu.service.MatchService;
 import ch.qos.logback.classic.Logger;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +44,32 @@ public class MatchController {
         }catch (Exception ex){
             ex.printStackTrace();
             logger.error("Erro ao buscar matchs para aluno {}: {}", id, ex.getMessage());
+            return ResponseEntity.status(500).body(new ApiResponse<>(false, "Erro interno: " + ex.getMessage(), null));
+        }
+    }
+
+    @PutMapping("/{id}")
+    private ResponseEntity<?> alterarMatch(@PathVariable long id, @RequestBody Map<String, Object> request){
+        try{
+            String statusNovo = (String) request.get("status");
+            System.out.println("=== CONTROLLER: Alterando match ID: " + id + " para status: " + statusNovo + " ===");
+
+            Match matchAlter = matchService.alterarMatch(id, statusNovo);
+
+            if (matchAlter != null) {
+                Map<String, Object> logData = new HashMap<>();
+                logData.put("event", "ALTERAR_MATCH");
+                logData.put("matchId", id);
+
+                logger.info("match retornados com sucesso: {}", logData);
+                return ResponseEntity.ok(new ApiResponse<>(true, "match alterado com sucesso", matchAlter));
+            } else {
+                logger.warn("Nenhum match encontrado para o ID: {}", id);
+                return ResponseEntity.ok(new ApiResponse<>(true, "Nenhum match encontrado", java.util.Collections.emptyList()));
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+            logger.error("Erro ao alterar match com id {}", ex.getMessage());
             return ResponseEntity.status(500).body(new ApiResponse<>(false, "Erro interno: " + ex.getMessage(), null));
         }
     }
