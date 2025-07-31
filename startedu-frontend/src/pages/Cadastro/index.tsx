@@ -3,7 +3,8 @@ import * as Form from "@radix-ui/react-form";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { cadastrar } from "../../services/cadastroService";
-import { logar } from "../../services/loginService"; // Importe o serviço de login
+import { logar } from "../../services/loginService";
+import { logarComGoogle } from "../../services/googleAuthService";
 import styles from "./Cadastro_style.module.css";
 
 const Cadastro = () => {
@@ -232,6 +233,43 @@ const Cadastro = () => {
             </Form.Field>
           </>
         )}
+
+        {/* Login com Google */}
+        <div className={styles.googleLogin}>
+          <button
+            type="button"
+            onClick={async (e) => {
+              e.preventDefault();
+              setLoading(true);
+              try {
+                await logarComGoogle();
+                setSuccess(true);
+                setTimeout(() => {
+                  navigate("/home");
+                }, 1000);
+              } catch (error) {
+                console.error("Erro no login com Google:", error);
+                setError("Erro ao fazer login com Google");
+              } finally {
+                setLoading(false);
+              }
+            }}
+            className={styles.googleButton}
+            disabled={loading}
+          >
+            <img
+              src="https://www.google.com/favicon.ico"
+              alt="Google"
+              className={styles.googleIcon}
+            />
+            {isLoginMode ? "Entrar com Google" : "Cadastrar com Google"}
+          </button>
+        </div>
+
+        {/* Separador */}
+        <div className={styles.separator}>
+          <span>ou</span>
+        </div>
 
         {/* Links de Ajuda */}
         <div className={styles.formLinks}>

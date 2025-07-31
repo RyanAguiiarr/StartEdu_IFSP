@@ -19,6 +19,9 @@ public class Cadastro {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private String googleId;
+    private String foto;
+
     public String getNome() {
         return nome;
     }
@@ -59,4 +62,21 @@ public class Cadastro {
         this.senha = senha;
     }
 
+    public String getGoogleId() {
+        return googleId;
+    }
+
+    public void setGoogleId(String googleId) {
+        this.googleId = googleId;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
 }
+
+

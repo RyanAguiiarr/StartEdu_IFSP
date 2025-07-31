@@ -19,8 +19,17 @@ interface AlunoResponse {
 }
 
 // Função para salvar dados do usuário no localStorage
-export const salvarUsuario = (usuario: Usuario): void => {
-  localStorage.setItem("usuario", JSON.stringify(usuario));
+export const salvarUsuario = (usuario: Usuario | null): void => {
+  if (!usuario) {
+    localStorage.removeItem("usuario");
+    return;
+  }
+  try {
+    localStorage.setItem("usuario", JSON.stringify(usuario));
+  } catch (error) {
+    console.error("Erro ao salvar usuário no localStorage:", error);
+    localStorage.removeItem("usuario");
+  }
 };
 
 // Função para salvar apenas o token
@@ -35,16 +44,27 @@ export const obterToken = (): string | null => {
 
 // Função para obter dados do usuário do localStorage
 export const obterUsuario = (): Usuario | null => {
-  const usuarioSalvo = localStorage.getItem("usuario");
-  if (usuarioSalvo) {
+  try {
+    const usuarioSalvo = localStorage.getItem("usuario");
+    if (
+      !usuarioSalvo ||
+      usuarioSalvo === "undefined" ||
+      usuarioSalvo === "null"
+    ) {
+      return null;
+    }
     return JSON.parse(usuarioSalvo);
+  } catch (error) {
+    console.error("Erro ao obter usuário do localStorage:", error);
+    return null;
   }
-  return null;
 };
 
 // Função para verificar se usuário está logado
 export const estaLogado = (): boolean => {
-  return localStorage.getItem("usuario") !== null;
+  const usuario = obterUsuario();
+  const token = obterToken();
+  return usuario !== null && token !== null && token !== "undefined";
 };
 
 // Função para fazer logout

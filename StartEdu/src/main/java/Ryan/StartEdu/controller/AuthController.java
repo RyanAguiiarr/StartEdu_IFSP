@@ -2,6 +2,7 @@ package Ryan.StartEdu.controller;
 
 import Ryan.StartEdu.dto.AuthRequestDTO;
 import Ryan.StartEdu.dto.AuthResponseDTO;
+import Ryan.StartEdu.dto.GoogleAuthRequestDTO;
 import Ryan.StartEdu.dto.RegisterRequestDTO;
 import Ryan.StartEdu.dto.UpdateEmailRequestDTO;
 import Ryan.StartEdu.model.Cadastro;
@@ -12,6 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -20,6 +23,17 @@ public class AuthController {
 
     public AuthController(AuthService authService) {
         this.authService = authService;
+    }
+
+    @PostMapping("/google")
+    public ResponseEntity<?> googleAuth(@Valid @RequestBody GoogleAuthRequestDTO request) {
+        try {
+            AuthResponseDTO authResponse = authService.loginWithGoogle(request);
+            return ResponseEntity.ok(authResponse);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(e.getMessage());
+        }
     }
 
     @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)

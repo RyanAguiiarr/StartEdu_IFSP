@@ -210,20 +210,72 @@
 }
 
 /* Links de navegação */
+.googleLogin {
+  margin: 1rem 0;
+}
+
+.googleButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  color: #444;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.googleButton:hover {
+  background-color: #f5f5f5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.googleButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.googleIcon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.separator::before,
+.separator::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #ddd;
+}
+
+.separator span {
+  padding: 0 10px;
+  color: #666;
+  font-size: 14px;
+}
+
 .formLinks {
-  margin: 28px 0 20px;
+  margin-top: 1rem;
   text-align: center;
 }
 
 .formLink {
-  color: #ff6a3d;
-  font-size: 0.9rem;
+  color: var(--accent-color);
   text-decoration: none;
-  transition: all 0.2s ease;
 }
 
 .formLink:hover {
-  color: #ff8c66;
   text-decoration: underline;
 }
 
