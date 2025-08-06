@@ -1,10 +1,11 @@
 import { api } from "./api";
 
-interface Usuario {
+export interface Usuario {
   id?: number;
   nome?: string;
   email: string;
   foto?: string;
+  token?: string;
 }
 
 interface ImagemAluno {

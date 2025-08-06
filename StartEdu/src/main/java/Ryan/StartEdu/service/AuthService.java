@@ -44,7 +44,7 @@ public class AuthService {
             Cadastro cadastroUser = cadastroRepository.save(cadastro);
 
             String token = jwtService.generateToken(cadastro);
-            return new AuthResponseDTO(cadastroUser.getId(), token);
+            return new AuthResponseDTO(cadastroUser.getId(), token, cadastroUser.getNome(), cadastroUser.getEmail());
     }
 
     public AuthResponseDTO loginUser(AuthRequestDTO authRequestDTO) {
@@ -56,7 +56,7 @@ public class AuthService {
         }
 
         String token = jwtService.generateToken(cadastro);
-        return new AuthResponseDTO(cadastro.getId(), token);
+        return new AuthResponseDTO(cadastro.getId(), token, cadastro.getNome(), cadastro.getEmail());
 
     }
 
