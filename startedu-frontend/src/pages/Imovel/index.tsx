@@ -40,6 +40,7 @@ import {
   FaTv,
   FaUtensils,
 } from "react-icons/fa";
+import { obterUsuario } from "../../services/authService";
 
 // Animações
 const fadeIn = {
@@ -121,6 +122,13 @@ const DetalheImovel: React.FC = () => {
       navigate("/login");
       return;
     }
+
+    const usuario_sessao = obterUsuario();
+
+    if(!usuario_sessao?.foto || usuario_sessao.foto == null){ 
+      navigate("/aluno");
+      return
+    } 
 
     if (!id || !imovel) return;
 
