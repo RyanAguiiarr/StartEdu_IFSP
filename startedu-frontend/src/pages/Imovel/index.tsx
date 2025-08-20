@@ -141,7 +141,7 @@ const DetalheImovel: React.FC = () => {
       if (sucesso) {
         setInteresseEnviado(true);
         alert(
-          "Interesse manifestado com sucesso! O proprietário será notificado."
+          "Interesse manifestado com exito! O proprietário será notificado."
         );
       } else {
         alert("Erro ao manifestar interesse. Tente novamente.");
