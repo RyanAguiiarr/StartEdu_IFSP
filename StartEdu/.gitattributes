@@ -1,2 +1,27 @@
-/mvnw text eol=lf
-*.cmd text eol=crlf
+# Ignore arquivos de dependências e configurações
+requirements.txt linguist-documentation
+*.txt linguist-documentation
+package-lock.json linguist-generated
+yarn.lock linguist-generated
+
+# Ignore arquivos de build e dist
+dist/* linguist-generated
+build/* linguist-generated
+target/* linguist-generated
+node_modules/* linguist-vendored
+
+# Definir arquivos principais do projeto
+*.java linguist-detectable=true
+*.js linguist-detectable=true
+*.jsx linguist-detectable=true
+*.ts linguist-detectable=true
+*.tsx linguist-detectable=true
+*.css linguist-detectable=true
+*.html linguist-detectable=true
+
+# Se você quer reduzir a detecção de Python na IA
+ia-assistente/* linguist-vendored=false
+ia-assistente/*.py linguist-detectable=true
+
+# Ou se quiser ignorar completamente a pasta IA das estatísticas
+# ia-assistente/* linguist-vendored=true
