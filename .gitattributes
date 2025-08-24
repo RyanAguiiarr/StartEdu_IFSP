@@ -1,11 +1,9 @@
-# Marcar corretamente linguagens
-*.js linguist-language=JavaScript
-*.tsx linguist-language=TypeScript
-*.ts linguist-language=TypeScript
-*.jsx linguist-language=JavaScript
-*.css linguist-language=CSS
-*.scss linguist-language=CSS
-*.module.css linguist-language=CSS
+# Forçar detecção das linguagens principais
+*.java linguist-detectable=true
+*.js linguist-detectable=true
+*.jsx linguist-detectable=true
+*.ts linguist-detectable=true
+*.tsx linguist-detectable=true
 
-# Ignorar arquivos Python específicos ou grandes modelos
-ia-assistente/* linguist-vendored=true
+# Reduzir peso de arquivos de configuração Python
+requirements.txt linguist-generated=true
