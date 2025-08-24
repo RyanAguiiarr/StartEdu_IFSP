@@ -8,4 +8,4 @@
 *.module.css linguist-language=CSS
 
 # Ignorar arquivos Python específicos ou grandes modelos
-ia-assistente/* linguist-vendored
+ia-assistente/* linguist-vendored=true
